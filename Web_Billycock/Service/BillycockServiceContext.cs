@@ -5,23 +5,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Web_Billycock.Data;
 
 namespace Billycock.Data
 {
     public class BillycockServiceContext: DbContext
     {
-        private readonly IDBSqlRepository _configuration;
-
-        public BillycockServiceContext(IDBSqlRepository configuration)
+        public BillycockServiceContext(string connectionString) : base(GetOptions(connectionString))
         {
-            _configuration = configuration;
         }
 
-        protected override async void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        private static DbContextOptions GetOptions(string connectionString)
         {
-            optionsBuilder.UseSqlServer(await _configuration.GetConnectionStrings("B")
-                , providerOptions => providerOptions.EnableRetryOnFailure());
+            return SqlServerDbContextOptionsExtensions.UseSqlServer(new DbContextOptionsBuilder(), connectionString).Options;
         }
 
         public DbSet<Usuario> USUARIO { get; set; }

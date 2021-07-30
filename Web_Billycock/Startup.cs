@@ -8,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Web_Billycock.Data;
 using Web_Billycock.Repositories.Interfaces;
 
 namespace Web_Billycock
@@ -26,7 +25,8 @@ namespace Web_Billycock
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddScoped<IDBSqlRepository, DBSqlRepository>();
+            services.AddScoped(_ => new BillycockServiceContext(Configuration["BillycockDb"]));
+            services.AddScoped(_ => new HilarioServiceContext(Configuration["HilarioDb"]));
             //services.AddScoped<IUsuarioRepository, UsuarioRepository>();
             //services.AddScoped<ICuentaRepository, CuentaRepository>();
             services.AddScoped<IEstadoRepository, EstadoRepository>();

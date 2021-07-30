@@ -12,7 +12,6 @@
       "commandName": "IISExpress",
       "launchBrowser": true,
       "environmentVariables": {
-        "urlDB": "https://billycock20210709181549.azurewebsites.net/Bd/GetBd?bd=",
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },

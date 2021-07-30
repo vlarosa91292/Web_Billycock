@@ -6,23 +6,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Web_Billycock.Data;
 
 namespace Billycock.Data
 {
     public class HilarioServiceContext : DbContext
     {
-        private readonly IDBSqlRepository _configuration;
-
-        public HilarioServiceContext(IDBSqlRepository configuration)
+        public HilarioServiceContext(string connectionString) : base(GetOptions(connectionString))
         {
-            _configuration = configuration;
         }
 
-        protected override async void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        private static DbContextOptions GetOptions(string connectionString)
         {
-            optionsBuilder.UseSqlServer(await _configuration.GetConnectionStrings("H"), 
-                providerOptions => providerOptions.EnableRetryOnFailure());
+            return SqlServerDbContextOptionsExtensions.UseSqlServer(new DbContextOptionsBuilder(), connectionString).Options;
         }
 
         public DbSet<Producto> PRODUCTO { get; set; }

@@ -12,10 +12,16 @@ namespace Billycock.Repositories.Repositories
 {
     public class CommonRepository<T> : ICommonRepository<T> where T : class
     {
+        private readonly BillycockServiceContext _context;
+        public CommonRepository(BillycockServiceContext context)
+        {
+            _context = context;
+        }
         public async Task Save(BillycockServiceContext _context)
         {
             await _context.SaveChangesAsync();
         }
+
         public async Task<string> DeleteLogicoObjeto(T tracker,T t, BillycockServiceContext _context)
         {
             string mensaje = "Eliminacion XXX de " + t.GetType().Name;
