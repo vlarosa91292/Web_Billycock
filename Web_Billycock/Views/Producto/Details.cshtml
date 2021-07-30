@@ -1,0 +1,60 @@
+﻿@model Billycock.Models.Hilario.Producto
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Producto</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.codigoBarra)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.codigoBarra)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.descripcion)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.descripcion)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.idlinea)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.idlinea)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.idProveedor)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.idProveedor)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.fechaVencimiento)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.fechaVencimiento)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.loteCaja)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.loteCaja)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.precioUnitario)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.precioUnitario)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.idProducto">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

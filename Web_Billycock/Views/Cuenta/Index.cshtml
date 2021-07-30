@@ -1,0 +1,95 @@
+﻿@model IEnumerable<Billycock.DTO.CuentaDTO>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.netflix)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.amazon)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.disney)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.hbo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.youtube)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.spotify)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.descEstado)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.idCuenta)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.correo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.diminutivo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.idEstado)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.netflix)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.amazon)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.disney)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.hbo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.youtube)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.spotify)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.descEstado)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.idCuenta)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.correo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.diminutivo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.idEstado)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.idCuenta">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.idCuenta">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.idCuenta">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

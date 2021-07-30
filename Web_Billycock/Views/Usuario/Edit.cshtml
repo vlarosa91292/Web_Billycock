@@ -1,0 +1,49 @@
+﻿@model Billycock.DTO.UsuarioDTO
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Usuario</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="idUsuario" />
+            <div class="form-group">
+                <label asp-for="descripcion" class="control-label"></label>
+                <input asp-for="descripcion" class="form-control" />
+                <span asp-validation-for="descripcion" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="netflix" class="control-label"></label>
+                <input asp-for="netflix" class="form-control" />
+                <span asp-validation-for="netflix" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="amazon" class="control-label"></label>
+                <input asp-for="amazon" class="form-control" />
+                <span asp-validation-for="amazon" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="disney" class="control-label"></label>
+                <input asp-for="disney" class="form-control" />
+                <span asp-validation-for="disney" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

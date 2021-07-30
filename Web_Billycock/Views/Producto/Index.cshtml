@@ -1,0 +1,71 @@
+﻿@model IEnumerable<Billycock.Models.Hilario.Producto>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Codigo de Barras
+            </th>
+            <th>
+                Descripcion
+            </th>
+            <th>
+                Linea
+            </th>
+            <th>
+                Proveedor
+            </th>
+            <th>
+                Fecha de Vencimiento
+            </th>
+            <th>
+                Lote o Caja
+            </th>
+            <th>
+                Precio
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @item.codigoBarra
+            </td>
+            <td>
+                @item.descripcion
+            </td>
+            <td>
+                @item.descLinea
+            </td>
+            <td>
+                @item.descProveedor
+            </td>
+            <td>
+                @item.fechaVencimiento.ToShortDateString()
+            </td>
+            <td>
+                @item.loteCaja
+            </td>
+            <td>
+                @item.precioUnitario
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.idProducto">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.idProducto">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.idProducto">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
