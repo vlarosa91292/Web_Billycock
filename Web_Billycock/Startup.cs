@@ -27,13 +27,13 @@ namespace Web_Billycock
             services.AddControllersWithViews();
             services.AddScoped(_ => new BillycockServiceContext(Configuration["BillycockDb"]));
             services.AddScoped(_ => new HilarioServiceContext(Configuration["HilarioDb"]));
-            //services.AddScoped<IUsuarioRepository, UsuarioRepository>();
-            //services.AddScoped<ICuentaRepository, CuentaRepository>();
+            services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+            services.AddScoped<ICuentaRepository, CuentaRepository>();
             services.AddScoped<IEstadoRepository, EstadoRepository>();
             services.AddScoped(typeof(ICommonRepository<>), typeof(CommonRepository<>));
-            //services.AddScoped<IPlataformaRepository, PlataformaRepository>();
-            //services.AddScoped<IPlataformaCuentaRepository, PlataformaCuentaRepository>();
-            //services.AddScoped<IUsuarioPlataformaCuentaRepository, UsuarioPlataformaCuentaRepository>();
+            services.AddScoped<IPlataformaRepository, PlataformaRepository>();
+            services.AddScoped<IPlataformaCuentaRepository, PlataformaCuentaRepository>();
+            services.AddScoped<IUsuarioPlataformaCuentaRepository, UsuarioPlataformaCuentaRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
