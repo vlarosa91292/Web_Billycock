@@ -31,7 +31,7 @@ namespace Billycock.Repositories.Repositories
             CuentaDTO account = await GetCuentabyId(cuenta.idCuenta);
             try
             {
-                return await _commonRepository.DeleteLogicoObjeto(cuenta, new Cuenta()
+                return await _commonRepository.DeleteLogicoObjeto(new Cuenta()
                 {
                     idCuenta = account.idCuenta,
                     diminutivo = account.diminutivo,
@@ -60,16 +60,10 @@ namespace Billycock.Repositories.Repositories
 
             try
             {
-                mensaje = await _commonRepository.InsertObjeto(cuenta, new Cuenta()
+                mensaje = await _commonRepository.InsertObjeto(new Cuenta()
                 {
                     diminutivo = cuenta.diminutivo,
                     correo = cuenta.correo,
-                    //netflix = cuenta.netflix,
-                    //amazon = cuenta.amazon,
-                    //disney = cuenta.disney,
-                    //hbo = cuenta.hbo,
-                    //youtube = cuenta.youtube,
-                    //spotify = cuenta.spotify,
                     idEstado = 1
                 }, _context);
             }
@@ -78,7 +72,7 @@ namespace Billycock.Repositories.Repositories
                 Console.WriteLine(ex.Message);
                 mensaje = _commonRepository.ExceptionMessage(cuenta, "C");
             }
-            if (mensaje.Contains("Correcta"))
+            if (mensaje.Contains("CORRECTA"))
             {
                 mensaje += Environment.NewLine;
                 try
@@ -112,25 +106,18 @@ namespace Billycock.Repositories.Repositories
         }
         public async Task<string> UpdateCuenta(CuentaDTO cuenta)
         {
-            CuentaDTO account = await GetCuentabyId(cuenta.idCuenta);
             string mensaje = string.Empty;
             List<int> idPlataformasAgregar = new List<int>();
             List<int> idPlataformasEliminar = new List<int>();
 
             try
             {
-                mensaje = await _commonRepository.UpdateObjeto(cuenta, new Cuenta()
+                mensaje = await _commonRepository.UpdateObjeto(new Cuenta()
                 {
-                    idCuenta = cuenta.idCuenta == 0 ? account.idCuenta : cuenta.idCuenta,
-                    diminutivo = cuenta.diminutivo == "" ? account.diminutivo : cuenta.diminutivo,
-                    correo = cuenta.correo == "" ? account.correo : cuenta.correo,
-                    //netflix = cuenta.netflix == account.netflix ? account.netflix : cuenta.netflix,
-                    //amazon = cuenta.amazon == account.amazon ? account.amazon : cuenta.amazon,
-                    //disney = cuenta.disney == account.disney ? account.disney : cuenta.disney,
-                    //hbo = cuenta.hbo == account.hbo ? account.hbo : cuenta.hbo,
-                    //youtube = cuenta.youtube == account.youtube ? account.youtube : cuenta.youtube,
-                    //spotify = cuenta.spotify == account.spotify ? account.spotify : cuenta.spotify,
-                    idEstado = cuenta.idEstado == account.idEstado ? account.idEstado : cuenta.idEstado
+                    idCuenta = cuenta.idCuenta ,
+                    diminutivo = cuenta.diminutivo,
+                    correo = cuenta.correo,
+                    idEstado = cuenta.idEstado
                 }, _context);
             }
             catch (Exception ex)
@@ -139,66 +126,67 @@ namespace Billycock.Repositories.Repositories
                 mensaje = _commonRepository.ExceptionMessage(cuenta, "U");
             }
 
-            //if (mensaje.Contains("Correcta"))
-            //{
-            //    try
-            //    {
-            //        if (cuenta.netflix != account.netflix)
-            //        {
-            //            if (cuenta.netflix == false) idPlataformasEliminar.Add(1);
-            //            else idPlataformasAgregar.Add(1);
-            //        }
-            //        if (cuenta.amazon != account.amazon)
-            //        {
-            //            if (cuenta.amazon == false) idPlataformasEliminar.Add(2);
-            //            else idPlataformasAgregar.Add(2);
-            //        }
-            //        if (cuenta.disney != account.disney)
-            //        {
-            //            if (cuenta.disney == false) idPlataformasEliminar.Add(3);
-            //            else idPlataformasAgregar.Add(3);
-            //        }
-            //        if (cuenta.hbo != account.hbo)
-            //        {
-            //            if (cuenta.hbo == false) idPlataformasEliminar.Add(4);
-            //            else idPlataformasAgregar.Add(4);
-            //        }
-            //        if (cuenta.youtube != account.youtube)
-            //        {
-            //            if (cuenta.youtube == false) idPlataformasEliminar.Add(5);
-            //            else idPlataformasAgregar.Add(5);
-            //        }
-            //        if (cuenta.spotify != account.spotify)
-            //        {
-            //            if (cuenta.spotify == false) idPlataformasEliminar.Add(6);
-            //            else idPlataformasAgregar.Add(6);
-            //        }
-            //        foreach (var item in idPlataformasAgregar)
-            //        {
-            //            mensaje += Environment.NewLine;
-            //            mensaje += await _plataformaCuentaRepository.InsertPlataformaCuenta(new PlataformaCuentaDTO()
-            //            {
-            //                idPlataforma = item,
-            //                idCuenta = cuenta.idCuenta,
-            //                fechaPago = DateTime.Now.ToShortDateString(),
-            //                usuariosdisponibles = _plataformaRepository.GetPlataformabyId(item).Result.numeroMaximoUsuarios
-            //            });
-            //        }
-            //        foreach (var item in idPlataformasEliminar)
-            //        {
-            //            mensaje += Environment.NewLine;
-            //            mensaje += await _plataformaCuentaRepository.DeletePlataformaCuenta(new PlataformaCuentaDTO()
-            //            {
-            //                idCuenta = cuenta.idCuenta,
-            //                idPlataforma = item
-            //            });
-            //        }
-            //    }
-            //    catch
-            //    {
-            //        mensaje += "ERROR EN LA ACTUALIZACION DE PLATAFORMAS EN CUENTA-SERVER";
-            //    }
-            //}
+            if (mensaje.Contains("CORRECTA"))
+            {
+                CuentaDTO account = await GetCuentabyId(cuenta.idCuenta);
+                try
+                {
+                    if (cuenta.netflix != account.netflix)
+                    {
+                        if (cuenta.netflix == false) idPlataformasEliminar.Add(1);
+                        else idPlataformasAgregar.Add(1);
+                    }
+                    if (cuenta.amazon != account.amazon)
+                    {
+                        if (cuenta.amazon == false) idPlataformasEliminar.Add(2);
+                        else idPlataformasAgregar.Add(2);
+                    }
+                    if (cuenta.disney != account.disney)
+                    {
+                        if (cuenta.disney == false) idPlataformasEliminar.Add(3);
+                        else idPlataformasAgregar.Add(3);
+                    }
+                    if (cuenta.hbo != account.hbo)
+                    {
+                        if (cuenta.hbo == false) idPlataformasEliminar.Add(4);
+                        else idPlataformasAgregar.Add(4);
+                    }
+                    if (cuenta.youtube != account.youtube)
+                    {
+                        if (cuenta.youtube == false) idPlataformasEliminar.Add(5);
+                        else idPlataformasAgregar.Add(5);
+                    }
+                    if (cuenta.spotify != account.spotify)
+                    {
+                        if (cuenta.spotify == false) idPlataformasEliminar.Add(6);
+                        else idPlataformasAgregar.Add(6);
+                    }
+                    foreach (var item in idPlataformasAgregar)
+                    {
+                        mensaje += Environment.NewLine;
+                        mensaje += await _plataformaCuentaRepository.InsertPlataformaCuenta(new PlataformaCuentaDTO()
+                        {
+                            idPlataforma = item,
+                            idCuenta = cuenta.idCuenta,
+                            fechaPago = DateTime.Now.ToShortDateString(),
+                            usuariosdisponibles = _plataformaRepository.GetPlataformabyId(item).Result.numeroMaximoUsuarios
+                        });
+                    }
+                    foreach (var item in idPlataformasEliminar)
+                    {
+                        mensaje += Environment.NewLine;
+                        mensaje += await _plataformaCuentaRepository.DeletePlataformaCuenta(new PlataformaCuentaDTO()
+                        {
+                            idCuenta = cuenta.idCuenta,
+                            idPlataforma = item
+                        });
+                    }
+                }
+                catch
+                {
+                    mensaje += "ERROR EN LA ACTUALIZACION DE PLATAFORMAS EN CUENTA-SERVER";
+                }
+            }
             return mensaje;
         }
         public async Task<List<CuentaDTO>> GetCuentas()
@@ -232,7 +220,7 @@ namespace Billycock.Repositories.Repositories
                                      descEstado = (from e in _context.ESTADO where e.idEstado == c.idEstado select e.descripcion).FirstOrDefault(),
                                      correo = c.correo,
                                      diminutivo = c.diminutivo
-                                 }).ToListAsync();
+                                 }).AsNoTracking().ToListAsync();
             }
             else if (tipo == 2)
             {
@@ -245,7 +233,7 @@ namespace Billycock.Repositories.Repositories
                                      descEstado = (from e in _context.ESTADO where e.idEstado == c.idEstado select e.descripcion).FirstOrDefault(),
                                      correo = c.correo,
                                      diminutivo = c.diminutivo
-                                 }).ToListAsync();
+                                 }).AsNoTracking().ToListAsync();
             }
             else
             {
@@ -258,7 +246,7 @@ namespace Billycock.Repositories.Repositories
                                      descEstado = (from e in _context.ESTADO where e.idEstado == c.idEstado select e.descripcion).FirstOrDefault(),
                                      correo = c.correo,
                                      diminutivo = c.diminutivo
-                                 }).ToListAsync();
+                                 }).AsNoTracking().ToListAsync();
             }
             foreach (var _cuenta in cuentas)
             {

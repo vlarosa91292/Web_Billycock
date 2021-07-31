@@ -22,7 +22,7 @@ namespace Billycock.Repositories.Repositories
         }
         public async Task<string> DeletePlataformaCuenta(PlataformaCuentaDTO plataformaCuenta)
         {
-            return await _commonRepository.DeleteObjeto(plataformaCuenta, plataformaCuenta, _context);
+            return await _commonRepository.DeleteObjeto(plataformaCuenta, _context);
         }
 
         public async Task<PlataformaCuentaDTO> GetPlataformaCuentabyIds(string id)
@@ -62,6 +62,7 @@ namespace Billycock.Repositories.Repositories
                                   clave = pc.clave,
                                   fechaPago = pc.fechaPago,
                                   Cuenta = (from c in _context.CUENTA where c.idCuenta == pc.idCuenta select c).FirstOrDefault(),
+                                  usuariosdisponibles = pc.usuariosdisponibles,
                                   Plataforma = (from p in _context.PLATAFORMA where p.idPlataforma == pc.idPlataforma select p).FirstOrDefault()
                                   //plataformaCuentas = (from pc in _context.PLATAFORMACUENTA
                                   //                     where pc.idPlataforma == c.idPlataforma
@@ -88,6 +89,7 @@ namespace Billycock.Repositories.Repositories
                                   idCuenta = pc.idCuenta,
                                   clave = pc.clave,
                                   fechaPago = pc.fechaPago,
+                                  usuariosdisponibles = pc.usuariosdisponibles,
                                   Cuenta = (from c in _context.CUENTA where c.idCuenta == pc.idCuenta select c).FirstOrDefault(),
                                   Plataforma = (from p in _context.PLATAFORMA where p.idPlataforma == pc.idPlataforma select p).FirstOrDefault()
                                   //plataformaCuentas = (from pc in _context.PLATAFORMACUENTA
@@ -114,6 +116,7 @@ namespace Billycock.Repositories.Repositories
                                   idCuenta = pc.idCuenta,
                                   clave = pc.clave,
                                   fechaPago = pc.fechaPago,
+                                  usuariosdisponibles = pc.usuariosdisponibles,
                                   Cuenta = (from c in _context.CUENTA where c.idCuenta == pc.idCuenta select c).FirstOrDefault(),
                                   Plataforma = (from p in _context.PLATAFORMA where p.idPlataforma == pc.idPlataforma select p).FirstOrDefault()
                                   //plataformaCuentas = (from pc in _context.PLATAFORMACUENTA
@@ -140,6 +143,7 @@ namespace Billycock.Repositories.Repositories
                                   idCuenta = pc.idCuenta,
                                   clave = pc.clave,
                                   fechaPago = pc.fechaPago,
+                                  usuariosdisponibles = pc.usuariosdisponibles,
                                   Cuenta = (from c in _context.CUENTA where c.idCuenta == pc.idCuenta select c).FirstOrDefault(),
                                   Plataforma = (from p in _context.PLATAFORMA where p.idPlataforma == pc.idPlataforma select p).FirstOrDefault()
                                   //plataformaCuentas = (from pc in _context.PLATAFORMACUENTA
@@ -159,7 +163,7 @@ namespace Billycock.Repositories.Repositories
 
         public async Task<string> InsertPlataformaCuenta(PlataformaCuentaDTO plataformaCuenta)
         {
-            return await _commonRepository.InsertObjeto(plataformaCuenta, plataformaCuenta, _context);
+            return await _commonRepository.InsertObjeto(plataformaCuenta, _context);
         }
 
         public async Task<bool> PlataformaCuentaExists(string idPlataformaCuenta)
@@ -172,7 +176,7 @@ namespace Billycock.Repositories.Repositories
 
         public async Task<string> UpdatePlataformaCuenta(PlataformaCuentaDTO plataformaCuenta)
         {
-            return await _commonRepository.UpdateObjeto(plataformaCuenta, plataformaCuenta, _context);
+            return await _commonRepository.UpdateObjeto(plataformaCuenta, _context);
         }
 
         public async Task<PlataformaCuentaDTO> GetPlataformaCuentaDisponible(int idPlataforma, int? cantidad)

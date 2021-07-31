@@ -26,7 +26,7 @@ namespace Billycock.Repositories.Repositories
             Estado state = await GetEstadobyId(estado.idEstado);
             try
             {
-                return await _commonRepository.DeleteObjeto(state,state,_context);
+                return await _commonRepository.DeleteObjeto(state,_context);
             }
             catch (Exception ex)
             {
@@ -38,7 +38,7 @@ namespace Billycock.Repositories.Repositories
         {
             try
             {
-                return await _commonRepository.InsertObjeto(estado, new Estado()
+                return await _commonRepository.InsertObjeto(new Estado()
                 {
                     descripcion = estado.descripcion
                 }, _context);
@@ -54,7 +54,7 @@ namespace Billycock.Repositories.Repositories
             Estado account = await GetEstadobyId(estado.idEstado);
             try
             {
-                return await _commonRepository.UpdateObjeto(estado, new Estado()
+                return await _commonRepository.UpdateObjeto(new Estado()
                 {
                     idEstado = account.idEstado,
                     descripcion = estado.descripcion

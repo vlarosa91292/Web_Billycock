@@ -26,7 +26,7 @@ namespace Billycock.Repositories.Repositories
             PlataformaDTO account = await GetPlataformabyId(plataforma.idPlataforma);
             try
             {
-                return await _commonRepository.DeleteLogicoObjeto(plataforma, new PlataformaDTO()
+                return await _commonRepository.DeleteLogicoObjeto(new PlataformaDTO()
                 {
                     idPlataforma = account.idPlataforma,
                     descripcion = plataforma.descripcion,
@@ -45,7 +45,7 @@ namespace Billycock.Repositories.Repositories
         {
             try
             {
-                return await _commonRepository.InsertObjeto(plataforma, new PlataformaDTO()
+                return await _commonRepository.InsertObjeto(new PlataformaDTO()
                 {
                     descripcion = plataforma.descripcion,
                     idEstado = 1,
@@ -62,18 +62,15 @@ namespace Billycock.Repositories.Repositories
         }
         public async Task<string> UpdatePlataforma(PlataformaDTO plataforma)
         {
-            PlataformaDTO account = await GetPlataformabyId(plataforma.idPlataforma);
-            List<int> idPlataformasAgregar = new List<int>();
-            List<int> idPlataformasEliminar = new List<int>();
             try
             {
-                return await _commonRepository.UpdateObjeto(plataforma, new PlataformaDTO()
+                return await _commonRepository.UpdateObjeto(new PlataformaDTO()
                 {
                     idPlataforma = plataforma.idPlataforma,
-                    descripcion = account.descripcion,
+                    descripcion = plataforma.descripcion,
                     idEstado = plataforma.idEstado,
                     numeroMaximoUsuarios = plataforma.numeroMaximoUsuarios,
-                    precio = account.precio
+                    precio = plataforma.precio
                 }, _context);
             }
             catch (Exception ex)
