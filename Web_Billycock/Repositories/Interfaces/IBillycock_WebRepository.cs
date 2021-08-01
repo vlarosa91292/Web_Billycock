@@ -24,19 +24,23 @@ namespace Web_Billycock.Repositories.Interfaces
                 Task<UsuarioDTO> GetUsuariobyId(int? id, bool complemento);
                 Task<UsuarioDTO> GetUsuariobyName(string name, bool complemento);
                 Task<bool> UsuarioExists(int id);
+
                 Task<List<PlataformaDTO>> GetPlataformas(bool complemento);
                 Task<PlataformaDTO> GetPlataformabyId(int? id, bool complemento);
                 Task<PlataformaDTO> GetPlataformabyName(string name, bool complemento);
                 Task<bool> PlataformaExists(int id);
+
                 Task<List<CuentaDTO>> GetCuentas(bool complemento);
                 Task<CuentaDTO> GetCuentabyId(int? id, bool complemento);
                 Task<CuentaDTO> GetCuentabyName(string Name, bool complemento);
                 Task<bool> CuentaExists(int id);
-                Task<List<PlataformaCuentaDTO>> GetPlataformaCuentas();
-                Task<PlataformaCuentaDTO> GetPlataformaCuentabyIdPlataforma(string id);
-                Task<PlataformaCuentaDTO> GetPlataformaCuentabyIdCuenta(string id);
-                Task<PlataformaCuentaDTO> GetPlataformaCuentabyIds(string id);
+
+                Task<List<PlataformaCuentaDTO>> GetPlataformaCuentas(bool complemento);
+                Task<PlataformaCuentaDTO> GetPlataformaCuentabyIdPlataforma(string id, bool complemento);
+                Task<PlataformaCuentaDTO> GetPlataformaCuentabyIdCuenta(string id, bool complemento);
+                Task<PlataformaCuentaDTO> GetPlataformaCuentabyIds(string id, bool complemento);
                 Task<bool> PlataformaCuentaExists(string idPlataformaCuenta);
+
                 Task<List<EstadoDTO>> GetEstados();
                 Task<EstadoDTO> GetEstadobyId(int? id);
                 Task<EstadoDTO> GetEstadobyName(string Name);

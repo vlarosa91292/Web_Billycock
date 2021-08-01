@@ -5,7 +5,6 @@ namespace Billycock.DTO
 {
     public class PlataformaCuentaDTO:PlataformaCuenta
     {
-        [JsonIgnore]
-        public string idPlataformaCuenta { get; set; }
+        
     }
 }

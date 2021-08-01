@@ -68,7 +68,7 @@ namespace Web_Billycock.Repositories.Repositories
                                     {
                                         plataformacuentas.Add(plataformacuenta);
 
-                                        plataformacuenta = await GetPlataformaCuentabyIds(plataformacuenta.idPlataforma.ToString() + "-" + plataformacuenta.idCuenta.ToString());
+                                        plataformacuenta = await GetPlataformaCuentabyIds(plataformacuenta.idPlataforma.ToString() + "-" + plataformacuenta.idCuenta.ToString(),false);
 
                                         await UpdatePlataformaCuenta(new PlataformaCuentaDTO()
                                         {
@@ -85,7 +85,7 @@ namespace Web_Billycock.Repositories.Repositories
 
                                     foreach (var pfc in plataformacuentas)
                                     {
-                                        plataformacuenta = await GetPlataformaCuentabyIds(pfc.idPlataforma.ToString() + "-" + pfc.idCuenta.ToString());
+                                        plataformacuenta = await GetPlataformaCuentabyIds(pfc.idPlataforma.ToString() + "-" + pfc.idCuenta.ToString(),false);
 
                                         await InsertPlataformaCuenta(new PlataformaCuentaDTO()
                                         {
@@ -101,7 +101,7 @@ namespace Web_Billycock.Repositories.Repositories
                             {
                                 plataformacuentas.Add(plataformacuenta);
 
-                                plataformacuenta = await GetPlataformaCuentabyIds(plataformacuenta.idPlataforma.ToString() + "-" + plataformacuenta.idCuenta.ToString());
+                                plataformacuenta = await GetPlataformaCuentabyIds(plataformacuenta.idPlataforma.ToString() + "-" + plataformacuenta.idCuenta.ToString(),false);
 
                                 await InsertPlataformaCuenta(new PlataformaCuentaDTO()
                                 {
@@ -175,60 +175,61 @@ namespace Web_Billycock.Repositories.Repositories
 
                 }
                 public async Task<string> InsertCuenta(CuentaDTO cuenta)
-        {
-            CuentaDTO account;
-            string mensaje = string.Empty;
-            List<int> idPlataformas = new List<int>();
-            int contador = 0;
+                {
+                    CuentaDTO account;
+                    string mensaje = string.Empty;
+                    List<int> idPlataformas = new List<int>();
+                    int contador = 0;
 
-            try
-            {
-                mensaje = await _commonRepository_C.InsertObjeto(new Cuenta()
-                {
-                    diminutivo = cuenta.diminutivo,
-                    correo = cuenta.correo,
-                    idEstado = 1
-                }, _context);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                mensaje = _commonRepository_C.ExceptionMessage(cuenta, "C");
-            }
-            if (mensaje.Contains("CORRECTA"))
-            {
-                mensaje += Environment.NewLine;
-                try
-                {
-                    if (cuenta.netflix) idPlataformas.Add(1);
-                    if (cuenta.amazon) idPlataformas.Add(2);
-                    if (cuenta.disney) idPlataformas.Add(3);
-                    if (cuenta.hbo) idPlataformas.Add(4);
-                    if (cuenta.youtube) idPlataformas.Add(5);
-                    if (cuenta.spotify) idPlataformas.Add(6);
-                    account = await GetCuentabyName(cuenta.correo, false);
-                    foreach (var item in idPlataformas)
+                    try
                     {
-                        if (contador >= 1) mensaje += Environment.NewLine;
-                        mensaje += await InsertPlataformaCuenta(new PlataformaCuentaDTO()
+                        mensaje = await _commonRepository_C.InsertObjeto(new Cuenta()
                         {
-                            idCuenta = account.idCuenta,
-                            idPlataforma = item,
-                            fechaPago = DateTime.Now.ToShortDateString(),
-                            usuariosdisponibles = GetPlataformabyId(item, false).Result.numeroMaximoUsuarios
-                        });
-                        contador++;
+                            diminutivo = cuenta.diminutivo,
+                            correo = cuenta.correo,
+                            idEstado = 1
+                        }, _context);
                     }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        mensaje = _commonRepository_C.ExceptionMessage(cuenta, "C");
+                    }
+                    if (mensaje.Contains("CORRECTA"))
+                    {
+                        mensaje += Environment.NewLine;
+                        try
+                        {
+                            if (cuenta.netflix) idPlataformas.Add(1);
+                            if (cuenta.amazon) idPlataformas.Add(2);
+                            if (cuenta.disney) idPlataformas.Add(3);
+                            if (cuenta.hbo) idPlataformas.Add(4);
+                            if (cuenta.youtube) idPlataformas.Add(5);
+                            if (cuenta.spotify) idPlataformas.Add(6);
+                            account = await GetCuentabyName(cuenta.correo, false);
+                            foreach (var item in idPlataformas)
+                            {
+                                if (contador >= 1) mensaje += Environment.NewLine;
+                                mensaje += await InsertPlataformaCuenta(new PlataformaCuentaDTO()
+                                {
+                                    idCuenta = account.idCuenta,
+                                    idPlataforma = item,
+                                    fechaPago = DateTime.Now.ToShortDateString(),
+                                    usuariosdisponibles = GetPlataformabyId(item, false).Result.numeroMaximoUsuarios
+                                });
+                                contador++;
+                            }
+                        }
+                        catch
+                        {
+                            mensaje = _commonRepository_C.ExceptionMessage(cuenta, "C");
+                        }
+                    }
+                    return mensaje;
                 }
-                catch
-                {
-                    mensaje = _commonRepository_C.ExceptionMessage(cuenta, "C");
-                }
-            }
-            return mensaje;
-        }
                 public async Task<string> InsertPlataformaCuenta(PlataformaCuentaDTO plataformaCuenta)
                 {
+                    plataformaCuenta.idPlataformaCuenta = plataformaCuenta.idPlataforma + "-" + plataformaCuenta.idCuenta;
                     return await _commonRepository_PC.InsertObjeto(plataformaCuenta, _context);
                 }
                 public async Task<string> InsertEstado(EstadoDTO estado)
@@ -266,95 +267,16 @@ namespace Web_Billycock.Repositories.Repositories
             #region Read
                 public async Task<List<UsuarioDTO>> GetUsuarios(bool complemento)
                 {
-                    return await ObtenerUsuarios(1, "", complemento);
+                    return await ObtenerUsuarios(1, null, complemento);
                 }
-                public async Task<List<CuentaDTO>> GetCuentas(bool complemento)
-                {
-                    return await ObtenerCuentas(1, "", complemento);
-                }
-                public async Task<List<PlataformaDTO>> GetPlataformas(bool complemento)
-                {
-                    return await ObtenerPlataformas(1, "", complemento);
-                }
-                public async Task<List<PlataformaCuentaDTO>> GetPlataformaCuentas()
-                {
-                    return await ObtenerPlataformaCuentas(1, null);
-                }
-                public async Task<List<EstadoDTO>> GetEstados()
-                {
-                    return await ObtenerEstados(1, "");
-                }
-
                 public async Task<UsuarioDTO> GetUsuariobyId(int? id, bool complemento)
                 {
                     return (await ObtenerUsuarios(2, id.ToString(), complemento))[0];
                 }
-                public async Task<PlataformaDTO> GetPlataformabyId(int? id, bool complemento)
-                {
-                    return (await ObtenerPlataformas(2, id.ToString(), complemento))[0];
-                }
-                public async Task<CuentaDTO> GetCuentabyId(int? id, bool complemento)
-                {
-                    return (await ObtenerCuentas(2, id.ToString(), complemento))[0];
-                }
-                public async Task<PlataformaCuentaDTO> GetPlataformaCuentabyIds(string id)
-                {
-                    return (await ObtenerPlataformaCuentas(2, id))[0];
-                }
-                public async Task<PlataformaCuentaDTO> GetPlataformaCuentabyIdPlataforma(string id)
-                {
-                    return (await ObtenerPlataformaCuentas(3, id))[0];
-                }
-                public async Task<PlataformaCuentaDTO> GetPlataformaCuentabyIdCuenta(string id)
-                {
-                    return (await ObtenerPlataformaCuentas(4, id))[0];
-                }
-                public async Task<EstadoDTO> GetEstadobyId(int? id)
-                {
-                    return (await ObtenerEstados(2, id.ToString()))[0];
-                }
-
-                public async Task<UsuarioDTO> GetUsuariobyName(string name, bool complemento)
-                {
-                    return (await ObtenerUsuarios(3, name, complemento))[0];
-                }
-                public async Task<PlataformaDTO> GetPlataformabyName(string name, bool complemento)
-                {
-                    return (await ObtenerPlataformas(3, name, complemento))[0];
-                }
-                public async Task<CuentaDTO> GetCuentabyName(string name, bool complemento)
-                {
-                    return (await ObtenerCuentas(3, name, complemento))[0];
-                }
-                public async Task<EstadoDTO> GetEstadobyName(string name)
-                {
-                    return (await ObtenerEstados(3, name))[0];
-                }
-
                 public async Task<bool> UsuarioExists(int id)
                 {
                     return await _context.USUARIO.AnyAsync(e => e.idUsuario == id);
                 }
-                public async Task<bool> PlataformaExists(int id)
-                {
-                    return await _context.PLATAFORMA.AnyAsync(e => e.idPlataforma == id);
-                }
-                public async Task<bool> CuentaExists(int id)
-                {
-                    return await _context.CUENTA.AnyAsync(e => e.idCuenta == id);
-                }
-                public async Task<bool> PlataformaCuentaExists(string idPlataformaCuenta)
-                {
-                    int idPlataforma = int.Parse(idPlataformaCuenta.Split("-")[0]);
-                    int idCuenta = int.Parse(idPlataformaCuenta.Split("-")[1]);
-                    return await _context.PLATAFORMACUENTA.AnyAsync(e => e.idPlataforma == idPlataforma
-                                                                        && e.idCuenta == idCuenta);
-                }
-                public async Task<bool> EstadoExists(int id)
-                {
-                    return await _context.ESTADO.AnyAsync(e => e.idEstado == id);
-                }
-
                 public async Task<List<UsuarioDTO>> ObtenerUsuarios(int tipo, string dato, bool complemento)
                 {
                     List<UsuarioDTO> usuarios = new List<UsuarioDTO>();
@@ -475,66 +397,26 @@ namespace Web_Billycock.Repositories.Repositories
                     }
                     return usuarios;
                 }
-                public async Task<List<PlataformaDTO>> ObtenerPlataformas(int tipo, string dato, bool complemento)
+
+                public async Task<List<CuentaDTO>> GetCuentas(bool complemento)
                 {
-                    List<PlataformaDTO> plataformas;
-                    List<PlataformaCuenta> plataformaCuentas = new List<PlataformaCuenta>();
-                    if (tipo == 1)
-                    {
-                        plataformas = await (from c in _context.PLATAFORMA
-                                             select new PlataformaDTO()
-                                             {
-                                                 idPlataforma = c.idPlataforma,
-                                                 descripcion = c.descripcion,
-                                                 idEstado = c.idEstado,
-                                                 descEstado = (from e in _context.ESTADO where e.idEstado == c.idEstado select e.descripcion).FirstOrDefault(),
-                                                 numeroMaximoUsuarios = c.numeroMaximoUsuarios,
-                                                 precio = c.precio
-                                             }).ToListAsync();
-                    }
-                    else if (tipo == 2)
-                    {
-                        plataformas = await (from c in _context.PLATAFORMA
-                                             where c.idPlataforma == int.Parse(dato)
-                                             select new PlataformaDTO()
-                                             {
-                                                 idPlataforma = c.idPlataforma,
-                                                 descripcion = c.descripcion,
-                                                 idEstado = c.idEstado,
-                                                 descEstado = (from e in _context.ESTADO where e.idEstado == c.idEstado select e.descripcion).FirstOrDefault(),
-                                                 numeroMaximoUsuarios = c.numeroMaximoUsuarios,
-                                                 precio = c.precio
-                                             }).ToListAsync();
-                    }
-                    else
-                    {
-                        plataformas = await (from c in _context.PLATAFORMA
-                                             where c.descripcion == dato
-                                             select new PlataformaDTO()
-                                             {
-                                                 idPlataforma = c.idPlataforma,
-                                                 descripcion = c.descripcion,
-                                                 idEstado = c.idEstado,
-                                                 descEstado = (from e in _context.ESTADO where e.idEstado == c.idEstado select e.descripcion).FirstOrDefault(),
-                                                 numeroMaximoUsuarios = c.numeroMaximoUsuarios,
-                                                 precio = c.precio
-                                             }).ToListAsync();
-                    }
-                    if (complemento)
-                    {
-                        foreach (var _plataforma in plataformas)
-                        {
-                            foreach (var _cuenta in await GetCuentas(false))
-                            {
-                                if (await PlataformaCuentaExists(_plataforma.idPlataforma + "-" + _cuenta.idCuenta))
-                                {
-                                    plataformaCuentas.Add(await GetPlataformaCuentabyIds(_plataforma.idPlataforma + "-" + _cuenta.idCuenta));
-                                }
-                            }
-                            _plataforma.plataformaCuentas = plataformaCuentas;
-                        }
-                    }
-                    return plataformas;
+                    return await ObtenerCuentas(1, null, complemento);
+                }
+                public async Task<CuentaDTO> GetCuentabyId(int? id, bool complemento)
+                {
+                    return (await ObtenerCuentas(2, id.ToString(), complemento))[0];
+                }
+                public async Task<UsuarioDTO> GetUsuariobyName(string name, bool complemento)
+                {
+                    return (await ObtenerUsuarios(3, name, complemento))[0];
+                }
+                public async Task<CuentaDTO> GetCuentabyName(string name, bool complemento)
+                {
+                    return (await ObtenerCuentas(3, name, complemento))[0];
+                }
+                public async Task<bool> CuentaExists(int id)
+                {
+                    return await _context.CUENTA.AnyAsync(e => e.idCuenta == id);
                 }
                 public async Task<List<CuentaDTO>> ObtenerCuentas(int tipo, string dato, bool complemento)
                 {
@@ -592,7 +474,7 @@ namespace Web_Billycock.Repositories.Repositories
                                     else if (_plataforma.idPlataforma == 4) _cuenta.hbo = true;
                                     else if (_plataforma.idPlataforma == 5) _cuenta.youtube = true;
                                     else _cuenta.spotify = true;
-                                    plataformaCuentas.Add(await GetPlataformaCuentabyIds(_plataforma.idPlataforma + "-" + _cuenta.idCuenta));
+                                    plataformaCuentas.Add(await GetPlataformaCuentabyIds(_plataforma.idPlataforma + "-" + _cuenta.idCuenta,false));
                                 }
                             }
                             _cuenta.plataformaCuentas = plataformaCuentas;
@@ -600,118 +482,195 @@ namespace Web_Billycock.Repositories.Repositories
                     }
                     return cuentas;
                 }
-                public async Task<List<PlataformaCuentaDTO>> ObtenerPlataformaCuentas(int tipo, string dato)
-            {
-                string[] array;
-                if (tipo == 1)
+
+                public async Task<List<PlataformaDTO>> GetPlataformas(bool complemento)
                 {
-                    return await (from pc in _context.PLATAFORMACUENTA
-                                  select new PlataformaCuentaDTO()
-                                  {
-                                      idPlataformaCuenta = pc.idPlataforma + "-" + pc.idCuenta,
-                                      idPlataforma = pc.idPlataforma,
-                                      idCuenta = pc.idCuenta,
-                                      clave = pc.clave,
-                                      fechaPago = pc.fechaPago,
-                                      Cuenta = (from c in _context.CUENTA where c.idCuenta == pc.idCuenta select c).FirstOrDefault(),
-                                      usuariosdisponibles = pc.usuariosdisponibles,
-                                      Plataforma = (from p in _context.PLATAFORMA where p.idPlataforma == pc.idPlataforma select p).FirstOrDefault()
-                                      //plataformaCuentas = (from pc in _context.PLATAFORMACUENTA
-                                      //                     where pc.idPlataforma == c.idPlataforma
-                                      //                     select new PlataformaCuentaDTO()
-                                      //                     {
-                                      //                         idCuenta = pc.idPlataforma,
-                                      //                         descCuenta = c.descripcion,
-                                      //                         idPlataforma = pc.idPlataforma,
-                                      //                         descPlataforma = (from p in _context.PLATAFORMA where p.idPlataforma == pc.idPlataforma select p.descripcion).FirstOrDefault(),
-                                      //                         fechaPago = pc.fechaPago,
-                                      //                         usuariosdisponibles = pc.usuariosdisponibles
-                                      //                     }).ToList()
-                                  }).ToListAsync();
+                    return await ObtenerPlataformas(1, null, complemento);
                 }
-                else if (tipo == 2)
+                public async Task<PlataformaDTO> GetPlataformabyId(int? id, bool complemento)
                 {
-                    array = dato.Split("-");
-                    return await (from pc in _context.PLATAFORMACUENTA
-                                  where pc.idPlataforma == int.Parse(array[0]) && pc.idCuenta == int.Parse(array[1])
-                                  select new PlataformaCuentaDTO()
-                                  {
-                                      idPlataformaCuenta = pc.idPlataforma + "-" + pc.idCuenta,
-                                      idPlataforma = pc.idPlataforma,
-                                      idCuenta = pc.idCuenta,
-                                      clave = pc.clave,
-                                      fechaPago = pc.fechaPago,
-                                      usuariosdisponibles = pc.usuariosdisponibles,
-                                      Cuenta = (from c in _context.CUENTA where c.idCuenta == pc.idCuenta select c).FirstOrDefault(),
-                                      Plataforma = (from p in _context.PLATAFORMA where p.idPlataforma == pc.idPlataforma select p).FirstOrDefault()
-                                      //plataformaCuentas = (from pc in _context.PLATAFORMACUENTA
-                                      //                     where pc.idPlataforma == c.idPlataforma
-                                      //                     select new PlataformaCuentaDTO()
-                                      //                     {
-                                      //                         idCuenta = pc.idPlataforma,
-                                      //                         descCuenta = c.descripcion,
-                                      //                         idPlataforma = pc.idPlataforma,
-                                      //                         descPlataforma = (from p in _context.PLATAFORMA where p.idPlataforma == pc.idPlataforma select p.descripcion).FirstOrDefault(),
-                                      //                         fechaPago = pc.fechaPago,
-                                      //                         usuariosdisponibles = pc.usuariosdisponibles
-                                      //                     }).ToList()
-                                  }).ToListAsync();
+                    return (await ObtenerPlataformas(2, id.ToString(), complemento))[0];
                 }
-                else if (tipo == 3)
+                public async Task<PlataformaDTO> GetPlataformabyName(string name, bool complemento)
                 {
-                    return await (from pc in _context.PLATAFORMACUENTA
-                                  where pc.idPlataforma == int.Parse(dato)
-                                  select new PlataformaCuentaDTO()
-                                  {
-                                      idPlataformaCuenta = pc.idPlataforma + "-" + pc.idCuenta,
-                                      idPlataforma = pc.idPlataforma,
-                                      idCuenta = pc.idCuenta,
-                                      clave = pc.clave,
-                                      fechaPago = pc.fechaPago,
-                                      usuariosdisponibles = pc.usuariosdisponibles,
-                                      Cuenta = (from c in _context.CUENTA where c.idCuenta == pc.idCuenta select c).FirstOrDefault(),
-                                      Plataforma = (from p in _context.PLATAFORMA where p.idPlataforma == pc.idPlataforma select p).FirstOrDefault()
-                                      //plataformaCuentas = (from pc in _context.PLATAFORMACUENTA
-                                      //                     where pc.idPlataforma == c.idPlataforma
-                                      //                     select new PlataformaCuentaDTO()
-                                      //                     {
-                                      //                         idCuenta = pc.idPlataforma,
-                                      //                         descCuenta = c.descripcion,
-                                      //                         idPlataforma = pc.idPlataforma,
-                                      //                         descPlataforma = (from p in _context.PLATAFORMA where p.idPlataforma == pc.idPlataforma select p.descripcion).FirstOrDefault(),
-                                      //                         fechaPago = pc.fechaPago,
-                                      //                         usuariosdisponibles = pc.usuariosdisponibles
-                                      //                     }).ToList()
-                                  }).ToListAsync();
+                    return (await ObtenerPlataformas(3, name, complemento))[0];
                 }
-                else
+                public async Task<bool> PlataformaExists(int id)
                 {
-                    return await (from pc in _context.PLATAFORMACUENTA
-                                  where pc.idCuenta == int.Parse(dato)
-                                  select new PlataformaCuentaDTO()
-                                  {
-                                      idPlataformaCuenta = pc.idPlataforma + "-" + pc.idCuenta,
-                                      idPlataforma = pc.idPlataforma,
-                                      idCuenta = pc.idCuenta,
-                                      clave = pc.clave,
-                                      fechaPago = pc.fechaPago,
-                                      usuariosdisponibles = pc.usuariosdisponibles,
-                                      Cuenta = (from c in _context.CUENTA where c.idCuenta == pc.idCuenta select c).FirstOrDefault(),
-                                      Plataforma = (from p in _context.PLATAFORMA where p.idPlataforma == pc.idPlataforma select p).FirstOrDefault()
-                                      //plataformaCuentas = (from pc in _context.PLATAFORMACUENTA
-                                      //                     where pc.idPlataforma == c.idPlataforma
-                                      //                     select new PlataformaCuentaDTO()
-                                      //                     {
-                                      //                         idCuenta = pc.idPlataforma,
-                                      //                         descCuenta = c.descripcion,
-                                      //                         idPlataforma = pc.idPlataforma,
-                                      //                         descPlataforma = (from p in _context.PLATAFORMA where p.idPlataforma == pc.idPlataforma select p.descripcion).FirstOrDefault(),
-                                      //                         fechaPago = pc.fechaPago,
-                                      //                         usuariosdisponibles = pc.usuariosdisponibles
-                                      //                     }).ToList()
-                                  }).ToListAsync();
+                    return await _context.PLATAFORMA.AnyAsync(e => e.idPlataforma == id);
                 }
-            }
+                public async Task<List<PlataformaDTO>> ObtenerPlataformas(int tipo, string dato, bool complemento)
+                {
+                    List<PlataformaDTO> plataformas;
+                    List<PlataformaCuenta> plataformaCuentas = new List<PlataformaCuenta>();
+                    if (tipo == 1)
+                    {
+                        plataformas = await (from c in _context.PLATAFORMA
+                                             select new PlataformaDTO()
+                                             {
+                                                 idPlataforma = c.idPlataforma,
+                                                 descripcion = c.descripcion,
+                                                 idEstado = c.idEstado,
+                                                 descEstado = (from e in _context.ESTADO where e.idEstado == c.idEstado select e.descripcion).FirstOrDefault(),
+                                                 numeroMaximoUsuarios = c.numeroMaximoUsuarios,
+                                                 precio = c.precio
+                                             }).ToListAsync();
+                    }
+                    else if (tipo == 2)
+                    {
+                        plataformas = await (from c in _context.PLATAFORMA
+                                             where c.idPlataforma == int.Parse(dato)
+                                             select new PlataformaDTO()
+                                             {
+                                                 idPlataforma = c.idPlataforma,
+                                                 descripcion = c.descripcion,
+                                                 idEstado = c.idEstado,
+                                                 descEstado = (from e in _context.ESTADO where e.idEstado == c.idEstado select e.descripcion).FirstOrDefault(),
+                                                 numeroMaximoUsuarios = c.numeroMaximoUsuarios,
+                                                 precio = c.precio
+                                             }).ToListAsync();
+                    }
+                    else
+                    {
+                        plataformas = await (from c in _context.PLATAFORMA
+                                             where c.descripcion == dato
+                                             select new PlataformaDTO()
+                                             {
+                                                 idPlataforma = c.idPlataforma,
+                                                 descripcion = c.descripcion,
+                                                 idEstado = c.idEstado,
+                                                 descEstado = (from e in _context.ESTADO where e.idEstado == c.idEstado select e.descripcion).FirstOrDefault(),
+                                                 numeroMaximoUsuarios = c.numeroMaximoUsuarios,
+                                                 precio = c.precio
+                                             }).ToListAsync();
+                    }
+                    if (complemento)
+                    {
+                        foreach (var _plataforma in plataformas)
+                        {
+                            foreach (var _cuenta in await GetCuentas(false))
+                            {
+                                if (await PlataformaCuentaExists(_plataforma.idPlataforma + "-" + _cuenta.idCuenta))
+                                {
+                                    plataformaCuentas.Add(await GetPlataformaCuentabyIds(_plataforma.idPlataforma + "-" + _cuenta.idCuenta,false));
+                                }
+                            }
+                            _plataforma.plataformaCuentas = plataformaCuentas;
+                        }
+                    }
+                    return plataformas;
+                }
+
+                public async Task<List<PlataformaCuentaDTO>> GetPlataformaCuentas(bool complemento)
+                {
+                    return await ObtenerPlataformaCuentas(1, null,complemento);
+                }
+                public async Task<PlataformaCuentaDTO> GetPlataformaCuentabyIds(string id, bool complemento)
+                {
+                    return (await ObtenerPlataformaCuentas(2, id,complemento))[0];
+                }
+                public async Task<PlataformaCuentaDTO> GetPlataformaCuentabyIdPlataforma(string id, bool complemento)
+                {
+                    return (await ObtenerPlataformaCuentas(3, id,complemento))[0];
+                }
+                public async Task<PlataformaCuentaDTO> GetPlataformaCuentabyIdCuenta(string id, bool complemento)
+                {
+                    return (await ObtenerPlataformaCuentas(4, id,complemento))[0];
+                }
+                public async Task<bool> PlataformaCuentaExists(string idPlataformaCuenta)
+                {
+                    int idPlataforma = int.Parse(idPlataformaCuenta.Split("-")[0]);
+                    int idCuenta = int.Parse(idPlataformaCuenta.Split("-")[1]);
+                    return await _context.PLATAFORMACUENTA.AnyAsync(e => e.idPlataforma == idPlataforma
+                                                                        && e.idCuenta == idCuenta);
+                }
+                public async Task<List<PlataformaCuentaDTO>> ObtenerPlataformaCuentas(int tipo, string dato,bool complemento)
+                {
+                    List<PlataformaCuentaDTO> plataformaCuentas;
+                    string[] array;
+                    if (tipo == 1)
+                    {
+                        plataformaCuentas = await (from pc in _context.PLATAFORMACUENTA
+                                      select new PlataformaCuentaDTO()
+                                      {
+                                          idPlataformaCuenta = pc.idPlataformaCuenta,
+                                          idPlataforma = pc.idPlataforma,
+                                          idCuenta = pc.idCuenta,
+                                          clave = pc.clave,
+                                          fechaPago = pc.fechaPago,
+                                          usuariosdisponibles = pc.usuariosdisponibles
+                                      }).ToListAsync();
+                    }
+                    else if (tipo == 2)
+                    {
+                        array = dato.Split("-");
+                        plataformaCuentas =  await (from pc in _context.PLATAFORMACUENTA
+                                      where pc.idPlataforma == int.Parse(array[0]) && pc.idCuenta == int.Parse(array[1])
+                                      select new PlataformaCuentaDTO()
+                                      {
+                                          idPlataformaCuenta = pc.idPlataformaCuenta,
+                                          idPlataforma = pc.idPlataforma,
+                                          idCuenta = pc.idCuenta,
+                                          clave = pc.clave,
+                                          fechaPago = pc.fechaPago,
+                                          usuariosdisponibles = pc.usuariosdisponibles
+                                      }).ToListAsync();
+                    }
+                    else if (tipo == 3)
+                    {
+                        plataformaCuentas = await(from pc in _context.PLATAFORMACUENTA
+                                      where pc.idPlataforma == int.Parse(dato)
+                                      select new PlataformaCuentaDTO()
+                                      {
+                                          idPlataformaCuenta = pc.idPlataformaCuenta,
+                                          idPlataforma = pc.idPlataforma,
+                                          idCuenta = pc.idCuenta,
+                                          clave = pc.clave,
+                                          fechaPago = pc.fechaPago,
+                                          usuariosdisponibles = pc.usuariosdisponibles
+                                      }).ToListAsync();
+                    }
+                    else
+                    {
+                        plataformaCuentas = await(from pc in _context.PLATAFORMACUENTA
+                                      where pc.idCuenta == int.Parse(dato)
+                                      select new PlataformaCuentaDTO()
+                                      {
+                                          idPlataformaCuenta = pc.idPlataformaCuenta,
+                                          idPlataforma = pc.idPlataforma,
+                                          idCuenta = pc.idCuenta,
+                                          clave = pc.clave,
+                                          fechaPago = pc.fechaPago,
+                                          usuariosdisponibles = pc.usuariosdisponibles
+                                      }).ToListAsync();
+                    }
+                    if (complemento)
+                    {
+                        foreach (var _plataformaCuenta in plataformaCuentas)
+                        {
+                            _plataformaCuenta.Cuenta = await GetCuentabyId(_plataformaCuenta.idCuenta,false);
+                            _plataformaCuenta.Plataforma = await GetPlataformabyId(_plataformaCuenta.idPlataforma,false);
+                        }
+                    }
+                    return plataformaCuentas;
+                }
+
+                public async Task<List<EstadoDTO>> GetEstados()
+                {
+                    return await ObtenerEstados(1, null);
+                }
+                public async Task<EstadoDTO> GetEstadobyId(int? id)
+                {
+                    return (await ObtenerEstados(2, id.ToString()))[0];
+                }
+                public async Task<EstadoDTO> GetEstadobyName(string name)
+                {
+                    return (await ObtenerEstados(3, name))[0];
+                }
+                public async Task<bool> EstadoExists(int id)
+                {
+                    return await _context.ESTADO.AnyAsync(e => e.idEstado == id);
+                }
                 public async Task<List<EstadoDTO>> ObtenerEstados(int tipo, string dato)
                 {
                     if (tipo == 1)
@@ -748,7 +707,7 @@ namespace Web_Billycock.Repositories.Repositories
             #region Update
             public async Task<string> UpdateUsuario(UsuarioDTO usuario)
                 {
-                    Usuario user = await GetUsuariobyId(usuario.idUsuario, false);
+                    UsuarioDTO user = await GetUsuariobyId(usuario.idUsuario, false);
                     try
                     {
                         return await _commonRepository_U.UpdateObjeto(new Usuario()
@@ -769,7 +728,7 @@ namespace Web_Billycock.Repositories.Repositories
                 }
             public async Task<string> UpdatePlataforma(PlataformaDTO plataforma)
             {
-                Plataforma platform = await GetPlataformabyId(plataforma.idPlataforma, false);
+                PlataformaDTO platform = await GetPlataformabyId(plataforma.idPlataforma, false);
                 try
                 {
                     return await _commonRepository_P.UpdateObjeto(new PlataformaDTO()
@@ -788,16 +747,17 @@ namespace Web_Billycock.Repositories.Repositories
                 }
             }
             public async Task<string> UpdateCuenta(CuentaDTO cuenta)
-        {
+            {
             string mensaje = string.Empty;
             List<int> idPlataformasAgregar = new List<int>();
             List<int> idPlataformasEliminar = new List<int>();
 
+            CuentaDTO account = await GetCuentabyId(cuenta.idCuenta, false);
             try
             {
                 mensaje = await _commonRepository_C.UpdateObjeto(new Cuenta()
                 {
-                    idCuenta = cuenta.idCuenta,
+                    idCuenta = account.idCuenta,
                     diminutivo = cuenta.diminutivo,
                     correo = cuenta.correo,
                     idEstado = cuenta.idEstado
@@ -811,7 +771,6 @@ namespace Web_Billycock.Repositories.Repositories
 
             if (mensaje.Contains("CORRECTA"))
             {
-                CuentaDTO account = await GetCuentabyId(cuenta.idCuenta, false);
                 try
                 {
                     if (cuenta.netflix != account.netflix)
@@ -874,9 +833,31 @@ namespace Web_Billycock.Repositories.Repositories
         }
             public async Task<string> UpdatePlataformaCuenta(PlataformaCuentaDTO plataformaCuenta)
             {
-                return await _commonRepository_PC.UpdateObjeto(plataformaCuenta, _context);
+                PlataformaCuentaDTO platformAccount = await GetPlataformaCuentabyIds(plataformaCuenta.idPlataformaCuenta,false);
+                string mensaje = string.Empty;
+                try
+                {
+                    mensaje = await _commonRepository_PC.UpdateObjeto(new PlataformaCuenta()
+                    {
+                        idPlataformaCuenta = platformAccount.idPlataformaCuenta,
+                        idCuenta = platformAccount.idCuenta,
+                        idPlataforma = platformAccount.idPlataforma,
+                        fechaPago = plataformaCuenta.fechaPago == null? DateTime.Parse(platformAccount.fechaPago).AddMonths(1).ToShortDateString(): platformAccount.fechaPago,
+                        usuariosdisponibles = platformAccount.usuariosdisponibles,
+                        clave = plataformaCuenta.clave != platformAccount.clave? plataformaCuenta.clave: platformAccount.clave
+                    }, _context);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    mensaje = _commonRepository_PC.ExceptionMessage(plataformaCuenta, "U");
+                }
+                return mensaje;
             }
-            public async Task<string> UpdateEstado(EstadoDTO estado)
+
+        
+
+        public async Task<string> UpdateEstado(EstadoDTO estado)
         {
             EstadoDTO account = await GetEstadobyId(estado.idEstado);
             try

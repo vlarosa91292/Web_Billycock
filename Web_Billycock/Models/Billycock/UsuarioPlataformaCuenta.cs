@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text.Json.Serialization;
@@ -9,6 +10,8 @@ namespace Billycock.Models
 {
     public class UsuarioPlataformaCuenta
     {
+        [Key]
+        public string idUsuarioPlataformaCuenta { get; set; }
         public int? cantidad { get; set; }
         //Usuario
         [ForeignKey("Usuario")]

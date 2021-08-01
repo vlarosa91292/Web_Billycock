@@ -1,0 +1,55 @@
+﻿@model Billycock.DTO.PlataformaCuentaDTO
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>PlataformaCuentaDTO</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.idPlataformaCuenta)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.idPlataformaCuenta)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.usuariosdisponibles)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.usuariosdisponibles)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.fechaPago)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.fechaPago)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.clave)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.clave)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.idPlataforma)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.idPlataforma)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.idCuenta)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.idCuenta)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="CrearContraseña" asp-route-id="@Model.idPlataformaCuenta">Crear Contraseña</a> |
+    <a asp-action="ActualizarPago" asp-route-id="@Model.idPlataformaCuenta">Actualizar Pago</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
