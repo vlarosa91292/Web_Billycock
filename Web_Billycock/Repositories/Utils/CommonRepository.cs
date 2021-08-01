@@ -26,7 +26,7 @@ namespace Billycock.Repositories.Repositories
             string mensaje = "Eliminacion XXX de " + t.GetType().Name;
             try
             {
-                _context.Update(t);
+                _context.Entry(t).State = EntityState.Modified;
                 await Save(_context);
                 mensaje = mensaje.Replace("XXX","Correcta").ToUpper();
             }
@@ -42,7 +42,7 @@ namespace Billycock.Repositories.Repositories
             string mensaje = "Eliminacion XXX de " + t.GetType().Name;
             try
             {
-                _context.Remove(t);
+                _context.Entry(t).State = EntityState.Deleted;
                 await Save(_context);
                 mensaje = mensaje.Replace("XXX", "Correcta").ToUpper();
             }
@@ -58,7 +58,7 @@ namespace Billycock.Repositories.Repositories
             string mensaje = "Creacion XXX de " + t.GetType().Name;
             try
             {
-                await _context.AddAsync(t);
+                _context.Entry(t).State = EntityState.Added;
 
                 await Save(_context);
 
@@ -76,7 +76,7 @@ namespace Billycock.Repositories.Repositories
             string mensaje = ("Actualizacion XXX de " + t.GetType().Name).ToUpper();
             try
             {
-                _context.Update(t);
+                _context.Entry(t).State = EntityState.Modified;
                 await Save(_context);
 
                 mensaje = mensaje.Replace("XXX", "Correcta").ToUpper();

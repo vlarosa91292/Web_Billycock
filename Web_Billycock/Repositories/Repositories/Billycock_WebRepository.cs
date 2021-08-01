@@ -43,7 +43,7 @@ namespace Web_Billycock.Repositories.Repositories
                 public async Task<string> InsertUsuario(UsuarioDTO usuario)
                 {
                     List<UsuarioPlataformaCuenta> plataformasxusuario = new List<UsuarioPlataformaCuenta>();
-                    List<PlataformaCuenta> plataformacuentasTemporal = new List<PlataformaCuenta>();
+                    List<PlataformaCuenta> plataformacuentasTotalitario = new List<PlataformaCuenta>();
                     List<PlataformaCuenta> plataformacuentas = new List<PlataformaCuenta>();
                     PlataformaCuenta plataformacuenta = new PlataformaCuenta();
                     List<string> resultadonulo = new List<string>();
@@ -67,15 +67,18 @@ namespace Web_Billycock.Repositories.Repositories
                                     if (plataformacuenta != null)
                                     {
                                         plataformacuentas.Add(plataformacuenta);
+                                        plataformacuentasTotalitario.Add(plataformacuenta);
 
-                                        plataformacuenta = await GetPlataformaCuentabyIds(plataformacuenta.idPlataforma.ToString() + "-" + plataformacuenta.idCuenta.ToString(),false);
+                                        plataformacuenta = await GetPlataformaCuentabyIds(plataformacuenta.idPlataformaCuenta,false);
 
                                         await UpdatePlataformaCuenta(new PlataformaCuentaDTO()
                                         {
+                                            idPlataformaCuenta = plataformacuenta.idPlataformaCuenta,
                                             idCuenta = plataformacuenta.idCuenta,
                                             idPlataforma = plataformacuenta.idPlataforma,
                                             fechaPago = plataformacuenta.fechaPago,
-                                            usuariosdisponibles = plataformacuenta.usuariosdisponibles - 1
+                                            usuariosdisponibles = plataformacuenta.usuariosdisponibles - 1,
+                                            clave = plataformacuenta.clave
                                         });
                                     }
                                 }
@@ -85,14 +88,16 @@ namespace Web_Billycock.Repositories.Repositories
 
                                     foreach (var pfc in plataformacuentas)
                                     {
-                                        plataformacuenta = await GetPlataformaCuentabyIds(pfc.idPlataforma.ToString() + "-" + pfc.idCuenta.ToString(),false);
+                                        plataformacuenta = await GetPlataformaCuentabyIds(pfc.idPlataformaCuenta,false);
 
-                                        await InsertPlataformaCuenta(new PlataformaCuentaDTO()
+                                        await UpdatePlataformaCuenta(new PlataformaCuentaDTO()
                                         {
+                                            idPlataformaCuenta = plataformacuenta.idPlataformaCuenta,
                                             idCuenta = plataformacuenta.idCuenta,
                                             idPlataforma = plataformacuenta.idPlataforma,
                                             fechaPago = plataformacuenta.fechaPago,
-                                            usuariosdisponibles = plataformacuenta.usuariosdisponibles + 1
+                                            usuariosdisponibles = plataformacuenta.usuariosdisponibles + 1,
+                                            clave = plataformacuenta.clave
                                         });
                                     }
                                 }
@@ -100,21 +105,40 @@ namespace Web_Billycock.Repositories.Repositories
                             else
                             {
                                 plataformacuentas.Add(plataformacuenta);
+                                plataformacuentasTotalitario.Add(plataformacuenta);
 
-                                plataformacuenta = await GetPlataformaCuentabyIds(plataformacuenta.idPlataforma.ToString() + "-" + plataformacuenta.idCuenta.ToString(),false);
+                                plataformacuenta = await GetPlataformaCuentabyIds(plataformacuenta.idPlataformaCuenta,false);
 
-                                await InsertPlataformaCuenta(new PlataformaCuentaDTO()
+                                await UpdatePlataformaCuenta(new PlataformaCuentaDTO()
                                 {
+                                    idPlataformaCuenta = plataformacuenta.idPlataformaCuenta,
                                     idCuenta = plataformacuenta.idCuenta,
                                     idPlataforma = plataformacuenta.idPlataforma,
                                     fechaPago = plataformacuenta.fechaPago,
-                                    usuariosdisponibles = plataformacuenta.usuariosdisponibles - item.cantidad
+                                    usuariosdisponibles = plataformacuenta.usuariosdisponibles - item.cantidad,
+                                    clave = plataformacuenta.clave
                                 });
                             }
                         }
+                    _context.Entry(plataformacuenta);
                         if (resultadonulo.Count != 0)
                         {
                             string mensaje = "NO HAY SUFICIENTES USUARIOS DISPONIBLES: " + Environment.NewLine;
+                            plataformacuentasTotalitario = plataformacuentasTotalitario.GroupBy(x => x.idPlataformaCuenta)
+                                           .Select(group => group.First()).ToList();
+                            foreach (var item in plataformacuentasTotalitario)
+                            {
+                                await UpdatePlataformaCuenta(new PlataformaCuentaDTO()
+                                {
+                                    idPlataformaCuenta = item.idPlataformaCuenta,
+                                    idCuenta = item.idCuenta,
+                                    idPlataforma = item.idPlataforma,
+                                    fechaPago = item.fechaPago,
+                                    usuariosdisponibles = item.usuariosdisponibles,
+                                    clave = item.clave
+                                });
+                            }
+                            
                             for (int i = 0; i < resultadonulo.Count; i++)
                             {
                                 mensaje += resultadonulo[i];
@@ -130,7 +154,7 @@ namespace Web_Billycock.Repositories.Repositories
                             facturacion = ObtenerFechaFacturacionUsuario(),
                             pago = await ObtenerMontoPagoUsuario(plataformasxusuario)
                         }, _context);
-                        //plataformacuentasTemporal = plataformacuentas.GroupBy(x => x.idPlataformaCuenta)
+                        //plataformacuentas = plataformacuentas.GroupBy(x => x.idPlataformaCuenta)
                         //                    .Select(group => group.First()).ToList();
 
                         //foreach (var plataformasxusuario in usuario.plataformasxusuario)
@@ -148,8 +172,8 @@ namespace Web_Billycock.Repositories.Repositories
                         //        await Save();
                         //    }
                         //}
-                    }
-                    catch (Exception ex)
+            }
+            catch (Exception ex)
                     {
                         Console.WriteLine(ex.Message);
                         return _commonRepository_U.ExceptionMessage(usuario, "C");
@@ -789,18 +813,17 @@ namespace Web_Billycock.Repositories.Repositories
                 public async Task<string> UpdatePlataformaCuenta(PlataformaCuentaDTO plataformaCuenta)
                 {
                     PlataformaCuentaDTO platformAccount = await GetPlataformaCuentabyIds(plataformaCuenta.idPlataformaCuenta,false);
+                    platformAccount.idPlataformaCuenta = platformAccount.idPlataformaCuenta;
+                    platformAccount.idCuenta = platformAccount.idCuenta;
+                    platformAccount.idPlataforma = platformAccount.idPlataforma;
+                    platformAccount.fechaPago = plataformaCuenta.fechaPago == null ? DateTime.Parse(platformAccount.fechaPago).AddMonths(1).ToShortDateString() : platformAccount.fechaPago;
+                    platformAccount.usuariosdisponibles = plataformaCuenta.usuariosdisponibles != platformAccount.usuariosdisponibles ? plataformaCuenta.usuariosdisponibles : platformAccount.usuariosdisponibles;
+                    platformAccount.clave = plataformaCuenta.clave != platformAccount.clave ? plataformaCuenta.clave : platformAccount.clave;
                     string mensaje = string.Empty;
                     try
                     {
-                        mensaje = await _commonRepository_PC.UpdateObjeto(new PlataformaCuenta()
-                        {
-                            idPlataformaCuenta = platformAccount.idPlataformaCuenta,
-                            idCuenta = platformAccount.idCuenta,
-                            idPlataforma = platformAccount.idPlataforma,
-                            fechaPago = plataformaCuenta.fechaPago == null? DateTime.Parse(platformAccount.fechaPago).AddMonths(1).ToShortDateString(): platformAccount.fechaPago,
-                            usuariosdisponibles = platformAccount.usuariosdisponibles,
-                            clave = plataformaCuenta.clave != platformAccount.clave? plataformaCuenta.clave: platformAccount.clave
-                        }, _context);
+                        _context.Entry(platformAccount).State = EntityState.Detached;
+                        mensaje = await _commonRepository_PC.UpdateObjeto(platformAccount, _context);
                     }
                     catch (Exception ex)
                     {
@@ -977,11 +1000,12 @@ namespace Web_Billycock.Repositories.Repositories
                           where pc.idPlataforma == idPlataforma && pc.usuariosdisponibles >= cantidad && c.idEstado != 2
                           select new PlataformaCuentaDTO()
                           {
-                              idPlataformaCuenta = pc.idCuenta.ToString() + "-" + pc.idPlataforma.ToString(),
+                              idPlataformaCuenta = pc.idPlataformaCuenta,
                               idCuenta = pc.idCuenta,
                               idPlataforma = pc.idPlataforma,
                               usuariosdisponibles = pc.usuariosdisponibles,
-                              fechaPago = pc.fechaPago
+                              fechaPago = pc.fechaPago,
+                              clave = pc.clave
                           }).FirstOrDefaultAsync();
         }
         #endregion Metodos secundarios
