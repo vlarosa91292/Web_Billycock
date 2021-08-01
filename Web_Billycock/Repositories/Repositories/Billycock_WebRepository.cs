@@ -752,7 +752,7 @@ namespace Web_Billycock.Repositories.Repositories
             List<int> idPlataformasAgregar = new List<int>();
             List<int> idPlataformasEliminar = new List<int>();
 
-            CuentaDTO account = await GetCuentabyId(cuenta.idCuenta, false);
+            CuentaDTO account = await GetCuentabyId(cuenta.idCuenta, true);
             try
             {
                 mensaje = await _commonRepository_C.UpdateObjeto(new Cuenta()

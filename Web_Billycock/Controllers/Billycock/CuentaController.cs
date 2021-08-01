@@ -69,7 +69,7 @@ namespace Web_Billycock.Controllers.Billycock
                 return NotFound();
             }
 
-            var cuenta = await _context.GetCuentabyId(id,false);
+            var cuenta = await _context.GetCuentabyId(id,true);
             if (cuenta == null)
             {
                 return NotFound();
