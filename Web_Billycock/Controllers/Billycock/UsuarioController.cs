@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Billycock.Models;
-using Billycock.Repositories.Interfaces;
+using Web_Billycock.Repositories.Interfaces;
 using Billycock.DTO;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,10 +13,10 @@ namespace Web_Billycock.Controllers
 {
     public class UsuarioController : Controller
     {
-        private readonly IUsuarioRepository _context;
+        private readonly IBillycock_WebRepository<Usuario> _context;
         private string mensajeEntreVistas;
 
-        public UsuarioController(IUsuarioRepository context)
+        public UsuarioController(IBillycock_WebRepository<Usuario> context)
         {
             _context = context;
         }
@@ -25,7 +25,7 @@ namespace Web_Billycock.Controllers
         public async Task<IActionResult> Index()
         {
             ViewBag.ShowDialog = true;
-            return View(await _context.GetUsuarios("WEB"));
+            return View(await _context.GetUsuarios(false));
         }
 
         // GET: Usuario/Details/5
@@ -36,7 +36,7 @@ namespace Web_Billycock.Controllers
                 return NotFound();
             }
 
-            var usuario = await _context.GetUsuariobyId(id, "WEB");
+            var usuario = await _context.GetUsuariobyId(id, true);
             if (usuario == null)
             {
                 return NotFound();
@@ -74,7 +74,7 @@ namespace Web_Billycock.Controllers
                 return NotFound();
             }
 
-            var usuario = await _context.GetUsuariobyId(id, "WEB");
+            var usuario = await _context.GetUsuariobyId(id, false);
             if (usuario == null)
             {
                 return NotFound();
@@ -98,7 +98,7 @@ namespace Web_Billycock.Controllers
             {
                 try
                 {
-                    mensajeEntreVistas = await _context.UpdateUsuario(usuario, "WEB");
+                    mensajeEntreVistas = await _context.UpdateUsuario(usuario);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -124,7 +124,7 @@ namespace Web_Billycock.Controllers
                 return NotFound();
             }
 
-            var usuario = await _context.GetUsuariobyId(id, "WEB");
+            var usuario = await _context.GetUsuariobyId(id, false);
             if (usuario == null)
             {
                 return NotFound();
@@ -138,8 +138,8 @@ namespace Web_Billycock.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var usuario = await _context.GetUsuariobyId(id, "WEB");
-            mensajeEntreVistas = await _context.DeleteUsuario(usuario, "WEB");
+            var usuario = await _context.GetUsuariobyId(id, false);
+            mensajeEntreVistas = await _context.DeleteUsuario(usuario);
             return RedirectToAction(nameof(Index));
         }
     }

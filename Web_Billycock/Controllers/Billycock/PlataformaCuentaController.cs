@@ -7,15 +7,15 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Billycock.Data;
 using Billycock.Models;
-using Billycock.Repositories.Interfaces;
+using Web_Billycock.Repositories.Interfaces;
 
 namespace Web_Billycock.Controllers.Billycock
 {
     public class PlataformaCuentaController : Controller
     {
-        private readonly IPlataformaCuentaRepository _context;
+        private readonly IBillycock_WebRepository<PlataformaCuenta> _context;
 
-        public PlataformaCuentaController(IPlataformaCuentaRepository context)
+        public PlataformaCuentaController(IBillycock_WebRepository<PlataformaCuenta> context)
         {
             _context = context;
         }

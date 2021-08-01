@@ -7,14 +7,15 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Billycock.Models;
 using Web_Billycock.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Web_Billycock.DTO;
 
 namespace Web_Billycock.Controllers.Billycock
 {
     public class EstadoController : Controller
     {
-        private readonly IEstadoRepository _context;
+        private readonly IBillycock_WebRepository<Estado> _context;
 
-        public EstadoController(IEstadoRepository context)
+        public EstadoController(IBillycock_WebRepository<Estado> context)
         {
             _context = context;
         }
@@ -53,7 +54,7 @@ namespace Web_Billycock.Controllers.Billycock
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("idEstado,descripcion")] Estado estado)
+        public async Task<IActionResult> Create([Bind("idEstado,descripcion")] EstadoDTO estado)
         {
             if (ModelState.IsValid)
             {
@@ -84,7 +85,7 @@ namespace Web_Billycock.Controllers.Billycock
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("idEstado,descripcion")] Estado estado)
+        public async Task<IActionResult> Edit(int id, [Bind("idEstado,descripcion")] EstadoDTO estado)
         {
             if (id != estado.idEstado)
             {

@@ -1,5 +1,4 @@
 using Billycock.Data;
-using Billycock.Repositories.Interfaces;
 using Billycock.Repositories.Repositories;
 using Billycock.Utils;
 using Microsoft.AspNetCore.Builder;
@@ -9,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Web_Billycock.Repositories.Interfaces;
+using Web_Billycock.Repositories.Repositories;
 
 namespace Web_Billycock
 {
@@ -27,13 +27,8 @@ namespace Web_Billycock
             services.AddControllersWithViews();
             services.AddScoped(_ => new BillycockServiceContext(Configuration["BillycockDb"]));
             services.AddScoped(_ => new HilarioServiceContext(Configuration["HilarioDb"]));
-            services.AddScoped<IUsuarioRepository, UsuarioRepository>();
-            services.AddScoped<ICuentaRepository, CuentaRepository>();
-            services.AddScoped<IEstadoRepository, EstadoRepository>();
+            services.AddScoped(typeof(IBillycock_WebRepository<>), typeof(Billycock_WebRepository<>));
             services.AddScoped(typeof(ICommonRepository<>), typeof(CommonRepository<>));
-            services.AddScoped<IPlataformaRepository, PlataformaRepository>();
-            services.AddScoped<IPlataformaCuentaRepository, PlataformaCuentaRepository>();
-            services.AddScoped<IUsuarioPlataformaCuentaRepository, UsuarioPlataformaCuentaRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

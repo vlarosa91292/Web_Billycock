@@ -1,6 +1,5 @@
 ﻿using Billycock.Data;
 using Billycock.Models;
-using Billycock.Repositories.Interfaces;
 using Billycock.Utils;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -36,7 +35,6 @@ namespace Billycock.Repositories.Repositories
                 Console.WriteLine(ex.Message);
                 mensaje = mensaje.Replace("XXX", "Incorrecta").ToUpper();
             }
-            await InsertHistory(t, mensaje,_context);
             return mensaje;
         }
         public async Task<string> DeleteObjeto(T t, BillycockServiceContext _context)
@@ -53,7 +51,6 @@ namespace Billycock.Repositories.Repositories
                 Console.WriteLine(ex.Message);
                 mensaje = mensaje.Replace("XXX", "Incorrecta").ToUpper();
             }
-            await InsertHistory(t, mensaje, _context);
             return mensaje;
         }
         public async Task<string> InsertObjeto(T t, BillycockServiceContext _context)
@@ -72,7 +69,6 @@ namespace Billycock.Repositories.Repositories
                 Console.WriteLine(ex.Message);
                 mensaje = mensaje.Replace("XXX", "Incorrecta").ToUpper();
             }
-            await InsertHistory(t, mensaje, _context);
             return mensaje;
         }
         public async Task<string> UpdateObjeto(T t, BillycockServiceContext _context)
@@ -90,7 +86,6 @@ namespace Billycock.Repositories.Repositories
                 Console.WriteLine(ex.Message);
                 mensaje = mensaje.Replace("XXX", "Incorrecta").ToUpper();
             }
-            await InsertHistory(t, mensaje, _context);
             return mensaje;
         }
         public string ExceptionMessage(T t, string MessageType)
@@ -110,22 +105,6 @@ namespace Billycock.Repositories.Repositories
             }
             return message;
         }
-        public async Task InsertHistory(T t, string response, BillycockServiceContext _context)
-        {
-            try
-            {
-                await _context.AddAsync(new Historia()
-                {
-                    Request = JsonConvert.SerializeObject(t),
-                    Response = response,
-                    fecha = DateTime.Now
-                });
-                await Save(_context);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-        }
+        
     }
 }

@@ -5,17 +5,17 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Billycock.Models;
-using Billycock.Repositories.Interfaces;
 using Billycock.DTO;
 using Microsoft.EntityFrameworkCore;
+using Web_Billycock.Repositories.Interfaces;
 
 namespace Web_Billycock.Controllers.Billycock
 {
     public class PlataformaController : Controller
     {
-        private readonly IPlataformaRepository _context;
+        private readonly IBillycock_WebRepository<Plataforma> _context;
 
-        public PlataformaController(IPlataformaRepository context)
+        public PlataformaController(IBillycock_WebRepository<Plataforma> context)
         {
             _context = context;
         }
@@ -23,7 +23,7 @@ namespace Web_Billycock.Controllers.Billycock
         // GET: Plataforma
         public async Task<IActionResult> Index()
         {
-            return View(await _context.GetPlataformas());
+            return View(await _context.GetPlataformas(false));
         }
 
         // GET: Plataforma/Details/5
@@ -34,7 +34,7 @@ namespace Web_Billycock.Controllers.Billycock
                 return NotFound();
             }
 
-            var plataforma = await _context.GetPlataformabyId(id);
+            var plataforma = await _context.GetPlataformabyId(id,true);
             if (plataforma == null)
             {
                 return NotFound();
@@ -72,7 +72,7 @@ namespace Web_Billycock.Controllers.Billycock
                 return NotFound();
             }
 
-            var plataforma = await _context.GetPlataformabyId(id);
+            var plataforma = await _context.GetPlataformabyId(id,false);
             if (plataforma == null)
             {
                 return NotFound();
@@ -122,7 +122,7 @@ namespace Web_Billycock.Controllers.Billycock
                 return NotFound();
             }
 
-            var plataforma = await _context.GetPlataformabyId(id);
+            var plataforma = await _context.GetPlataformabyId(id,false);
             if (plataforma == null)
             {
                 return NotFound();
@@ -136,7 +136,7 @@ namespace Web_Billycock.Controllers.Billycock
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var plataforma = await _context.GetPlataformabyId(id);
+            var plataforma = await _context.GetPlataformabyId(id,false);
             await _context.DeletePlataforma(plataforma);
             return RedirectToAction(nameof(Index));
         }

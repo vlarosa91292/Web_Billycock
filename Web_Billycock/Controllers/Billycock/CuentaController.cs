@@ -1,17 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Billycock.Repositories.Interfaces;
 using Billycock.DTO;
 using Microsoft.EntityFrameworkCore;
+using Web_Billycock.Repositories.Interfaces;
+using Billycock.Models;
 
 namespace Web_Billycock.Controllers.Billycock
 {
     public class CuentaController : Controller
     {
-        private readonly ICuentaRepository _context;
+        private readonly IBillycock_WebRepository<Cuenta> _context;
 
-        public CuentaController(ICuentaRepository context)
+        public CuentaController(IBillycock_WebRepository<Cuenta> context)
         {
             _context = context;
         }
@@ -19,7 +20,7 @@ namespace Web_Billycock.Controllers.Billycock
         // GET: Cuenta
         public async Task<IActionResult> Index()
         {
-            return View(await _context.GetCuentas());
+            return View(await _context.GetCuentas(true));
         }
 
         // GET: Cuenta/Details/5
@@ -30,7 +31,7 @@ namespace Web_Billycock.Controllers.Billycock
                 return NotFound();
             }
 
-            var cuenta = await _context.GetCuentabyId(id);
+            var cuenta = await _context.GetCuentabyId(id,true);
             if (cuenta == null)
             {
                 return NotFound();
@@ -68,7 +69,7 @@ namespace Web_Billycock.Controllers.Billycock
                 return NotFound();
             }
 
-            var cuenta = await _context.GetCuentabyId(id);
+            var cuenta = await _context.GetCuentabyId(id,false);
             if (cuenta == null)
             {
                 return NotFound();
@@ -118,7 +119,7 @@ namespace Web_Billycock.Controllers.Billycock
                 return NotFound();
             }
 
-            var cuenta = await _context.GetCuentabyId(id);
+            var cuenta = await _context.GetCuentabyId(id,false);
             if (cuenta == null)
             {
                 return NotFound();
@@ -132,7 +133,7 @@ namespace Web_Billycock.Controllers.Billycock
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var cuenta = await _context.GetCuentabyId(id);
+            var cuenta = await _context.GetCuentabyId(id,false);
             await _context.DeleteCuenta(cuenta);
             return RedirectToAction(nameof(Index));
         }
