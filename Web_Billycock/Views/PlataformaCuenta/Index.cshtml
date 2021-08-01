@@ -25,10 +25,10 @@
                 @Html.DisplayNameFor(model => model.clave)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.idPlataforma)
+                @Html.DisplayNameFor(model => model.Plataforma.descripcion)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.idCuenta)
+                @Html.DisplayNameFor(model => model.Cuenta.correo)
             </th>
             <th></th>
         </tr>
@@ -49,10 +49,10 @@
                 @Html.DisplayFor(modelItem => item.clave)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.idPlataforma)
+                @Html.DisplayFor(modelItem => item.Plataforma.descripcion)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.idCuenta)
+                @Html.DisplayFor(modelItem => item.Cuenta.correo)
             </td>
             <td>
                 <a asp-action="Details" asp-route-id="@item.idPlataformaCuenta">Details</a>

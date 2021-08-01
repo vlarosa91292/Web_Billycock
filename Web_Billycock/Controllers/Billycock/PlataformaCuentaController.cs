@@ -24,7 +24,7 @@ namespace Web_Billycock.Controllers.Billycock
         // GET: PlataformaCuenta
         public async Task<IActionResult> Index()
         {
-            return View(await _context.GetPlataformaCuentas(false));
+            return View(await _context.GetPlataformaCuentas(true));
         }
 
         // GET: PlataformaCuenta/Details/5
@@ -52,7 +52,7 @@ namespace Web_Billycock.Controllers.Billycock
                 return NotFound();
             }
 
-            var plataformaCuenta = await _context.GetPlataformaCuentabyIds(id, false);
+            var plataformaCuenta = await _context.GetPlataformaCuentabyIds(id, true);
             if (plataformaCuenta == null)
             {
                 return NotFound();
@@ -102,7 +102,7 @@ namespace Web_Billycock.Controllers.Billycock
                 return NotFound();
             }
 
-            var plataformaCuenta = await _context.GetPlataformaCuentabyIds(id, false);
+            var plataformaCuenta = await _context.GetPlataformaCuentabyIds(id, true);
             if (plataformaCuenta == null)
             {
                 return NotFound();
