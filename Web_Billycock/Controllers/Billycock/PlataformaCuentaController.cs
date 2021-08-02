@@ -115,7 +115,7 @@ namespace Web_Billycock.Controllers.Billycock
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ActualizarPago(string id, [Bind("idPlataformaCuenta,idCuenta,idPlataforma,usuariosdisponibles,clave")] PlataformaCuentaDTO plataformaCuenta)
+        public async Task<IActionResult> ActualizarPago(string id, [Bind("idPlataformaCuenta,idCuenta,idPlataforma,usuariosdisponibles,clave,fechaxActualizar")] PlataformaCuentaDTO plataformaCuenta)
         {
             if (id != plataformaCuenta.idPlataformaCuenta)
             {
