@@ -1132,7 +1132,8 @@ namespace Web_Billycock.Repositories.Repositories
                                             DateTimeStyles.None,
                     out dt))
                 {
-                    return dt.AddMonths(1).ToShortDateString();
+                    dt = dt.AddMonths(1);
+                    return dt.Day.ToString()+"/"+dt.Month.ToString()+"/"+dt.Year.ToString();
                 }
                 else
                 {
@@ -1142,7 +1143,8 @@ namespace Web_Billycock.Repositories.Repositories
                                         DateTimeStyles.None,
                                         out dt))
                 {
-                    return dt.AddMonths(1).ToShortDateString();
+                    dt = dt.AddMonths(1);
+                    return dt.Day.ToString() + "/" + dt.Month.ToString() + "/" + dt.Year.ToString();
                 }
                     else return "Fecha invalida";
                 }
