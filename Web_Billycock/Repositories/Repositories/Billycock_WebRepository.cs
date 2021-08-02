@@ -580,8 +580,7 @@ namespace Web_Billycock.Repositories.Repositories
                                                         idCuenta = pc.idCuenta,
                                                         clave = pc.clave,
                                                         fechaPago = pc.fechaPago,
-                                                        usuariosdisponibles = pc.usuariosdisponibles,
-                                                        //fechaxActualizar = DateTime.ParseExact(pc.fechaPago, "dd/MM/yyyy", CultureInfo.InvariantCulture).AddMonths(1).ToShortDateString()
+                                                        usuariosdisponibles = pc.usuariosdisponibles
                                                     }).ToListAsync();
                     }
                     else if (tipo == 2)
@@ -597,8 +596,7 @@ namespace Web_Billycock.Repositories.Repositories
                                                         idCuenta = pc.idCuenta,
                                                         clave = pc.clave,
                                                         fechaPago = pc.fechaPago,
-                                                        usuariosdisponibles = pc.usuariosdisponibles,
-                                                        fechaxActualizar = DateTime.ParseExact(pc.fechaPago, "dd/MM/yyyy", CultureInfo.InvariantCulture).AddMonths(1).ToShortDateString()
+                                                        usuariosdisponibles = pc.usuariosdisponibles
                                                     }).ToListAsync();
                     }
                     else if (tipo == 3)
@@ -613,8 +611,7 @@ namespace Web_Billycock.Repositories.Repositories
                                                       idCuenta = pc.idCuenta,
                                                       clave = pc.clave,
                                                       fechaPago = pc.fechaPago,
-                                                      usuariosdisponibles = pc.usuariosdisponibles,
-                                                      fechaxActualizar = DateTime.ParseExact(pc.fechaPago, "dd/MM/yyyy", CultureInfo.InvariantCulture).AddMonths(1).ToShortDateString()
+                                                      usuariosdisponibles = pc.usuariosdisponibles
                                                   }).ToListAsync();
                     }
                     else
@@ -629,13 +626,13 @@ namespace Web_Billycock.Repositories.Repositories
                                                         idCuenta = pc.idCuenta,
                                                         clave = pc.clave,
                                                         fechaPago = pc.fechaPago,
-                                                        usuariosdisponibles = pc.usuariosdisponibles,
-                                                        fechaxActualizar = DateTime.ParseExact(pc.fechaPago, "dd/MM/yyyy", CultureInfo.InvariantCulture).AddMonths(1).ToShortDateString()
+                                                        usuariosdisponibles = pc.usuariosdisponibles
                                                     }).ToListAsync();
                     }
-                    if (complemento)
+                    foreach (var _plataformaCuenta in plataformaCuentas)
                     {
-                        foreach (var _plataformaCuenta in plataformaCuentas)
+                        _plataformaCuenta.fechaxActualizar = SetearFecha(_plataformaCuenta.fechaPago);
+                        if (complemento)
                         {
                             _plataformaCuenta.Cuenta = await GetCuentabyId(_plataformaCuenta.idCuenta,false);
                             _plataformaCuenta.Plataforma = await GetPlataformabyId(_plataformaCuenta.idPlataforma, false);
@@ -1126,6 +1123,30 @@ namespace Web_Billycock.Repositories.Repositories
                               clave = pc.clave
                           }).FirstOrDefaultAsync();
         }
+            public string SetearFecha(string fecha)
+            {
+                DateTime dt;
+                if (DateTime.TryParseExact(fecha,
+                                            "d/M/yyyy",
+                                            CultureInfo.InvariantCulture,
+                                            DateTimeStyles.None,
+                    out dt))
+                {
+                    return dt.AddMonths(1).ToShortDateString();
+                }
+                else
+                {
+                    if(DateTime.TryParseExact(fecha,
+                                        "M/d/yyyy",
+                                        CultureInfo.InvariantCulture,
+                                        DateTimeStyles.None,
+                                        out dt))
+                {
+                    return dt.AddMonths(1).ToShortDateString();
+                }
+                    else return "Fecha invalida";
+                }
+            }
         #endregion Metodos secundarios
     }
 }
