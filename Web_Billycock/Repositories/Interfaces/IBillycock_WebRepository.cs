@@ -16,6 +16,7 @@ namespace Web_Billycock.Repositories.Interfaces
                 Task<string> InsertPlataforma(PlataformaDTO usuario);
                 Task<string> InsertCuenta(CuentaDTO cuenta);
                 Task<string> InsertPlataformaCuenta(PlataformaCuentaDTO plataformaCuenta);
+                Task<string> InsertUsuarioPlataformaCuenta(UsuarioPlataformaCuentaDTO usuarioPlataformaCuenta);
                 Task<string> InsertEstado(EstadoDTO estado);
                 Task InsertHistory(T t, string response, BillycockServiceContext _context);
             #endregion
@@ -41,6 +42,13 @@ namespace Web_Billycock.Repositories.Interfaces
                 Task<PlataformaCuentaDTO> GetPlataformaCuentabyIds(string id, bool complemento);
                 Task<bool> PlataformaCuentaExists(string idPlataformaCuenta);
 
+                Task<List<UsuarioPlataformaCuentaDTO>> GetUsuarioPlataformaCuentas(bool complemento);
+                Task<UsuarioPlataformaCuentaDTO> GetUsuarioPlataformaCuentabyIdUsuario(string id, bool complemento);
+                Task<UsuarioPlataformaCuentaDTO> GetUsuarioPlataformaCuentabyIdPlataforma(string id, bool complemento);
+                Task<UsuarioPlataformaCuentaDTO> GetUsuarioPlataformaCuentabyIdCuenta(string id, bool complemento);
+                Task<UsuarioPlataformaCuentaDTO> GetUsuarioPlataformaCuentabyIds(string id, bool complemento);
+                Task<bool> UsuarioPlataformaCuentaExists(string idPlataformaCuenta);
+
                 Task<List<EstadoDTO>> GetEstados();
                 Task<EstadoDTO> GetEstadobyId(int? id);
                 Task<EstadoDTO> GetEstadobyName(string Name);
@@ -58,6 +66,7 @@ namespace Web_Billycock.Repositories.Interfaces
                 Task<string> DeletePlataforma(PlataformaDTO usuario);
                 Task<string> DeleteCuenta(CuentaDTO cuenta);
                 Task<string> DeletePlataformaCuenta(PlataformaCuentaDTO plataformaCuenta);
+                Task<string> DeleteUsuarioPlataformaCuenta(UsuarioPlataformaCuentaDTO usuarioPlataformaCuenta);
                 Task<string> DeleteEstado(EstadoDTO estado);
             #endregion
         #endregion

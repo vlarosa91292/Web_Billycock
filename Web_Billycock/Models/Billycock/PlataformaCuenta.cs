@@ -12,7 +12,7 @@ namespace Billycock.Models
     {
         [Key]
         public string idPlataformaCuenta { get; set; }
-        public int? usuariosdisponibles { get; set; }
+        public int usuariosdisponibles { get; set; }
         public string fechaPago { get; set; }
         public string clave { get; set; }
         //PLATAFORMA

@@ -14,10 +14,10 @@ namespace Billycock.Models
         [JsonIgnore]
         public int idPlataforma { get; set; }
         public string descripcion { get; set; }
-        public int? numeroMaximoUsuarios { get; set; }
+        public int numeroMaximoUsuarios { get; set; }
         public double precio { get; set; }
         [JsonIgnore]
-        public int? idEstado { get; set; }
+        public int idEstado { get; set; }
         [JsonIgnore]
         public List<UsuarioPlataformaCuenta> usuarioPlataformaCuentas { get; set; }
         [JsonIgnore]

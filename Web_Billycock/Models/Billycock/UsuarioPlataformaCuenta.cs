@@ -12,7 +12,7 @@ namespace Billycock.Models
     {
         [Key]
         public string idUsuarioPlataformaCuenta { get; set; }
-        public int? cantidad { get; set; }
+        public int cantidad { get; set; }
         //Usuario
         [ForeignKey("Usuario")]
         public int idUsuario { get; set; }

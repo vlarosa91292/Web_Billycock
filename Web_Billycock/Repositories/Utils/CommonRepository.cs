@@ -28,6 +28,7 @@ namespace Billycock.Repositories.Repositories
             {
                 _context.Entry(t).State = EntityState.Modified;
                 await Save(_context);
+                _context.Entry(t).State = EntityState.Detached;
                 mensaje = mensaje.Replace("XXX","Correcta").ToUpper();
             }
             catch (Exception ex)
@@ -44,6 +45,7 @@ namespace Billycock.Repositories.Repositories
             {
                 _context.Entry(t).State = EntityState.Deleted;
                 await Save(_context);
+                _context.Entry(t).State = EntityState.Detached;
                 mensaje = mensaje.Replace("XXX", "Correcta").ToUpper();
             }
             catch (Exception ex)
@@ -59,9 +61,8 @@ namespace Billycock.Repositories.Repositories
             try
             {
                 _context.Entry(t).State = EntityState.Added;
-
                 await Save(_context);
-
+                _context.Entry(t).State = EntityState.Detached;
                 mensaje = mensaje.Replace("XXX", "Correcta").ToUpper();
             }
             catch (Exception ex)
@@ -78,7 +79,7 @@ namespace Billycock.Repositories.Repositories
             {
                 _context.Entry(t).State = EntityState.Modified;
                 await Save(_context);
-
+                _context.Entry(t).State = EntityState.Detached;
                 mensaje = mensaje.Replace("XXX", "Correcta").ToUpper();
             }
             catch (Exception ex)
