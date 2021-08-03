@@ -56,7 +56,7 @@ namespace Web_Billycock.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("descripcion,netflix,amazon,disney")] UsuarioDTO usuario)
+        public async Task<IActionResult> Create([Bind("descripcion,netflix,amazon,disney,hbo,youtube,spotify")] UsuarioDTO usuario)
         {
             if (ModelState.IsValid)
             {
@@ -87,7 +87,7 @@ namespace Web_Billycock.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("idUsuario,descripcion,idEstado,facturacion,pago,netflix,amazon,disney")] UsuarioDTO usuario)
+        public async Task<IActionResult> Edit(int id, [Bind("idUsuario,descripcion,idEstado,facturacion,pago,netflix,amazon,disney,hbo,youtube,spotify")] UsuarioDTO usuario)
         {
             if (id != usuario.idUsuario)
             {
