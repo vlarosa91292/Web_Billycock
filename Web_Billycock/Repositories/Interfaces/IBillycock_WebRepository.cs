@@ -37,16 +37,16 @@ namespace Web_Billycock.Repositories.Interfaces
                 Task<bool> CuentaExists(int id);
 
                 Task<List<PlataformaCuentaDTO>> GetPlataformaCuentas(bool complemento);
-                Task<PlataformaCuentaDTO> GetPlataformaCuentabyIdPlataforma(string id, bool complemento);
-                Task<PlataformaCuentaDTO> GetPlataformaCuentabyIdCuenta(string id, bool complemento);
                 Task<PlataformaCuentaDTO> GetPlataformaCuentabyIds(string id, bool complemento);
+                Task<List<PlataformaCuentaDTO>> GetPlataformaCuentasbyIdPlataforma(string id, bool complemento);
+                Task<List<PlataformaCuentaDTO>> GetPlataformaCuentasbyIdCuenta(string id, bool complemento);
                 Task<bool> PlataformaCuentaExists(string idPlataformaCuenta);
 
                 Task<List<UsuarioPlataformaCuentaDTO>> GetUsuarioPlataformaCuentas(bool complemento);
-                Task<UsuarioPlataformaCuentaDTO> GetUsuarioPlataformaCuentabyIdUsuario(string id, bool complemento);
-                Task<UsuarioPlataformaCuentaDTO> GetUsuarioPlataformaCuentabyIdPlataforma(string id, bool complemento);
-                Task<UsuarioPlataformaCuentaDTO> GetUsuarioPlataformaCuentabyIdCuenta(string id, bool complemento);
                 Task<UsuarioPlataformaCuentaDTO> GetUsuarioPlataformaCuentabyIds(string id, bool complemento);
+                Task<List<UsuarioPlataformaCuentaDTO>> GetUsuarioPlataformaCuentasbyIdUsuario(string id, bool complemento);
+                Task<List<UsuarioPlataformaCuentaDTO>> GetUsuarioPlataformaCuentasbyIdPlataforma(string id, bool complemento);
+                Task<List<UsuarioPlataformaCuentaDTO>> GetUsuarioPlataformaCuentasbyIdCuenta(string id, bool complemento);
                 Task<bool> UsuarioPlataformaCuentaExists(string idPlataformaCuenta);
 
                 Task<List<EstadoDTO>> GetEstados();

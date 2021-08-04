@@ -13,7 +13,7 @@ namespace Billycock.Models
         [Key]
         public int idUsuario { get; set; }
         public string descripcion { get; set; }
-        public DateTime? fechaInscripcion { get; set; }
+        public string fechaInscripcion { get; set; }
         [JsonIgnore]
         public int idEstado { get; set; }
         public string facturacion { get; set; }

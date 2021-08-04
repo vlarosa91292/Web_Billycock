@@ -12,7 +12,7 @@ namespace Billycock.Models
         public int idHistory {get;set;}
         public string Request { get; set; }
         public string Response { get; set; }
-        public DateTime fecha { get; set; }
+        public string fecha { get; set; }
         public string integracion { get; set; }
     }
 }
