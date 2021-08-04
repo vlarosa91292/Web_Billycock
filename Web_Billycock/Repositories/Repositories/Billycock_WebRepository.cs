@@ -629,7 +629,7 @@ namespace Web_Billycock.Repositories.Repositories
                 }
                 foreach (var _plataformaCuenta in plataformaCuentas)
                 {
-                    _plataformaCuenta.fechaxActualizar = SetearFecha(DateTime.Parse(_plataformaCuenta.fechaPago).AddMonths(1).ToShortDateString());
+                    _plataformaCuenta.fechaxActualizar = SetearFecha(DateTime.Parse(_plataformaCuenta.fechaPago).AddMonths(1));
                     if (complemento)
                     {
                         _plataformaCuenta.Cuenta = await GetCuentabyId(_plataformaCuenta.idCuenta,false);
@@ -1076,22 +1076,22 @@ namespace Web_Billycock.Repositories.Repositories
                 {
                     if (QuincenaMes)
                     {
-                        return SetearFecha(new DateTime(fechaHoy.Year, fechaHoy.Month, 15).AddMonths(1).ToShortDateString());
+                        return SetearFecha(new DateTime(fechaHoy.Year, fechaHoy.Month, 15).AddMonths(1));
                     }
                     else
                     {
-                        return SetearFecha(oPrimerDiaDelMes.AddMonths(2).AddDays(-1).ToShortDateString());
+                        return SetearFecha(oPrimerDiaDelMes.AddMonths(2).AddDays(-1));
                     }
                 }
                 else
                 {
                     if (QuincenaMes)
                     {
-                        return SetearFecha(new DateTime(fechaHoy.Year, fechaHoy.Month, 15).AddMonths(1).ToShortDateString());
+                        return SetearFecha(new DateTime(fechaHoy.Year, fechaHoy.Month, 15).AddMonths(1));
                     }
                     else
                     {
-                        return SetearFecha(oPrimerDiaDelMes.AddMonths(2).AddDays(-1).ToShortDateString());
+                        return SetearFecha(oPrimerDiaDelMes.AddMonths(2).AddDays(-1));
                     }
                 }
             }
@@ -1135,29 +1135,9 @@ namespace Web_Billycock.Repositories.Repositories
                               clave = pc.clave
                           }).FirstOrDefaultAsync();
         }
-            public string SetearFecha(string fecha)
+            public string SetearFecha(DateTime fecha)
             {
-                DateTime dt;
-                if (DateTime.TryParseExact(fecha,
-                                            "d/M/yyyy",
-                                            CultureInfo.InvariantCulture,
-                                            DateTimeStyles.None,
-                    out dt))
-                {
-                    return dt.Day.ToString()+"/"+dt.Month.ToString()+"/"+dt.Year.ToString();
-                }
-                else
-                {
-                    if(DateTime.TryParseExact(fecha,
-                                        "M/d/yyyy",
-                                        CultureInfo.InvariantCulture,
-                                        DateTimeStyles.None,
-                                        out dt))
-                {
-                    return dt.Day.ToString() + "/" + dt.Month.ToString() + "/" + dt.Year.ToString();
-                }
-                    else return "Fecha invalida";
-                }
+                return fecha.Day.ToString()+"/"+ fecha.Month.ToString()+"/"+ fecha.Year.ToString();
             }
             public string SetearFechaTiempo()
             {
