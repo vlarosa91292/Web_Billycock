@@ -629,7 +629,7 @@ namespace Web_Billycock.Repositories.Repositories
                 }
                 foreach (var _plataformaCuenta in plataformaCuentas)
                 {
-                    _plataformaCuenta.fechaxActualizar = SetearFecha(_plataformaCuenta.fechaPago);
+                    _plataformaCuenta.fechaxActualizar = SetearFecha(DateTime.Parse(_plataformaCuenta.fechaPago).AddMonths(1).ToShortDateString());
                     if (complemento)
                     {
                         _plataformaCuenta.Cuenta = await GetCuentabyId(_plataformaCuenta.idCuenta,false);
@@ -1144,7 +1144,6 @@ namespace Web_Billycock.Repositories.Repositories
                                             DateTimeStyles.None,
                     out dt))
                 {
-                    dt = dt.AddMonths(1);
                     return dt.Day.ToString()+"/"+dt.Month.ToString()+"/"+dt.Year.ToString();
                 }
                 else
@@ -1155,7 +1154,6 @@ namespace Web_Billycock.Repositories.Repositories
                                         DateTimeStyles.None,
                                         out dt))
                 {
-                    dt = dt.AddMonths(1);
                     return dt.Day.ToString() + "/" + dt.Month.ToString() + "/" + dt.Year.ToString();
                 }
                     else return "Fecha invalida";
