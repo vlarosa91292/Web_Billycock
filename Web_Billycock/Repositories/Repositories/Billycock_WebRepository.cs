@@ -627,6 +627,14 @@ namespace Web_Billycock.Repositories.Repositories
                                                     usuariosdisponibles = pc.usuariosdisponibles
                                                 }).ToListAsync();
                 }
+                if (complemento)
+                {
+                    foreach (var _plataformaCuenta in plataformaCuentas)
+                    {
+                        _plataformaCuenta.Cuenta = await GetCuentabyId(_plataformaCuenta.idCuenta,false);
+                        _plataformaCuenta.Plataforma = await GetPlataformabyId(_plataformaCuenta.idPlataforma,false);
+                    }
+                }
                 return plataformaCuentas;
             }
 
