@@ -579,7 +579,7 @@ namespace Web_Billycock.Repositories.Repositories
                                                     clave = pc.clave,
                                                     fechaPago = pc.fechaPago,
                                                     usuariosdisponibles = pc.usuariosdisponibles,
-                                                    fechaxActualizar = SetearFecha(DateTime.Parse(pc.fechaPago).AddMonths(1))
+                                                    //fechaxActualizar = SetearFecha(DateTime.Parse(pc.fechaPago).AddMonths(1))
                                                 }).ToListAsync();
                 }
                 else if (tipo == 2)
@@ -596,7 +596,7 @@ namespace Web_Billycock.Repositories.Repositories
                                                     clave = pc.clave,
                                                     fechaPago = pc.fechaPago,
                                                     usuariosdisponibles = pc.usuariosdisponibles,
-                                                    fechaxActualizar = SetearFecha(DateTime.Parse(pc.fechaPago).AddMonths(1))
+                                                    //fechaxActualizar = SetearFecha(DateTime.Parse(pc.fechaPago).AddMonths(1))
                                                 }).ToListAsync();
                 }
                 else if (tipo == 3)
@@ -612,7 +612,7 @@ namespace Web_Billycock.Repositories.Repositories
                                                     clave = pc.clave,
                                                     fechaPago = pc.fechaPago,
                                                     usuariosdisponibles = pc.usuariosdisponibles,
-                                                    fechaxActualizar = SetearFecha(DateTime.Parse(pc.fechaPago).AddMonths(1))
+                                                    //fechaxActualizar = SetearFecha(DateTime.Parse(pc.fechaPago).AddMonths(1))
                                                 }).ToListAsync();
                 }
                 else
@@ -628,7 +628,7 @@ namespace Web_Billycock.Repositories.Repositories
                                                     clave = pc.clave,
                                                     fechaPago = pc.fechaPago,
                                                     usuariosdisponibles = pc.usuariosdisponibles,
-                                                    fechaxActualizar = SetearFecha(DateTime.Parse(pc.fechaPago).AddMonths(1))
+                                                    //fechaxActualizar = SetearFecha(DateTime.Parse(pc.fechaPago).AddMonths(1))
                                                 }).ToListAsync();
                 }
                 return plataformaCuentas;
