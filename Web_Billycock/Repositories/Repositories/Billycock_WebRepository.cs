@@ -926,12 +926,6 @@ namespace Web_Billycock.Repositories.Repositories
             public async Task<string> UpdatePlataformaCuenta(PlataformaCuentaDTO plataformaCuenta)
             {
                 PlataformaCuentaDTO platformAccount = await GetPlataformaCuentabyIds(plataformaCuenta.idPlataformaCuenta,false);
-                platformAccount.idPlataformaCuenta = platformAccount.idPlataformaCuenta;
-                platformAccount.idCuenta = platformAccount.idCuenta;
-                platformAccount.idPlataforma = platformAccount.idPlataforma;
-                platformAccount.fechaPago = plataformaCuenta.fechaPago == null ? SetearFecha(DateTime.Parse(platformAccount.fechaPago).AddMonths(1)) : platformAccount.fechaPago;
-                platformAccount.usuariosdisponibles = plataformaCuenta.usuariosdisponibles != platformAccount.usuariosdisponibles ? plataformaCuenta.usuariosdisponibles : platformAccount.usuariosdisponibles;
-                platformAccount.clave = plataformaCuenta.clave != platformAccount.clave ? plataformaCuenta.clave : platformAccount.clave;
                     
                 try
                 {
@@ -940,7 +934,7 @@ namespace Web_Billycock.Repositories.Repositories
                         idPlataformaCuenta = platformAccount.idPlataformaCuenta,
                         idCuenta = platformAccount.idCuenta,
                         idPlataforma = platformAccount.idPlataforma,
-                        fechaPago = plataformaCuenta.fechaPago == null ? plataformaCuenta.fechaxActualizar : platformAccount.fechaPago,
+                        fechaPago = plataformaCuenta.fechaPago == null ? SetearFecha(DateTime.Parse(platformAccount.fechaPago).AddMonths(1)) : platformAccount.fechaPago,
                         usuariosdisponibles = plataformaCuenta.usuariosdisponibles != platformAccount.usuariosdisponibles ? plataformaCuenta.usuariosdisponibles : platformAccount.usuariosdisponibles,
                         clave = plataformaCuenta.clave != platformAccount.clave ? plataformaCuenta.clave : platformAccount.clave
                     }, _context);
