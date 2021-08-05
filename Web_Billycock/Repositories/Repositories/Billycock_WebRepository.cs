@@ -627,7 +627,7 @@ namespace Web_Billycock.Repositories.Repositories
                                                     usuariosdisponibles = pc.usuariosdisponibles
                                                 }).ToListAsync();
                 }
-                foreach (var _plataformaCuenta in plataformaCuentas)
+                /*foreach (var _plataformaCuenta in plataformaCuentas)
                 {
                     _plataformaCuenta.fechaxActualizar = SetearFecha(DateTime.Parse(_plataformaCuenta.fechaPago).AddMonths(1));
                     if (complemento)
@@ -635,7 +635,7 @@ namespace Web_Billycock.Repositories.Repositories
                         _plataformaCuenta.Cuenta = await GetCuentabyId(_plataformaCuenta.idCuenta,false);
                         _plataformaCuenta.Plataforma = await GetPlataformabyId(_plataformaCuenta.idPlataforma, false);
                     }
-                }
+                }*/
                 return plataformaCuentas;
             }
 
