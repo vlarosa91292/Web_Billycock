@@ -942,7 +942,7 @@ namespace Web_Billycock.Repositories.Repositories
                         idPlataformaCuenta = platformAccount.idPlataformaCuenta,
                         idCuenta = platformAccount.idCuenta,
                         idPlataforma = platformAccount.idPlataforma,
-                        fechaPago = plataformaCuenta.fechaPago == null ? SetearFecha(DateTime.Parse(platformAccount.fechaPago).AddMonths(1)) : platformAccount.fechaPago,
+                        fechaPago = plataformaCuenta.fechaPago == null ? plataformaCuenta.fechaxActualizar : platformAccount.fechaPago,
                         usuariosdisponibles = plataformaCuenta.usuariosdisponibles != platformAccount.usuariosdisponibles ? plataformaCuenta.usuariosdisponibles : platformAccount.usuariosdisponibles,
                         clave = plataformaCuenta.clave != platformAccount.clave ? plataformaCuenta.clave : platformAccount.clave
                     }, _context);

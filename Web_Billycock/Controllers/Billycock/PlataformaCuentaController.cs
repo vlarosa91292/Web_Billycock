@@ -103,6 +103,9 @@ namespace Web_Billycock.Controllers.Billycock
             }
 
             var plataformaCuenta = await _context.GetPlataformaCuentabyIds(id, true);
+            DateTime fecha = DateTime.Parse(plataformaCuenta.fechaPago).AddMonths(1);
+            string sfecha = fecha.Day.ToString() + "/" + fecha.Month.ToString() + "/" + fecha.Year.ToString();
+            plataformaCuenta.fechaxActualizar = sfecha;
             if (plataformaCuenta == null)
             {
                 return NotFound();
