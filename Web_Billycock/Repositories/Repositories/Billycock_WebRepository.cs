@@ -23,12 +23,11 @@ namespace Web_Billycock.Repositories.Repositories
         private readonly ICommonRepository<PlataformaCuenta> _commonRepository_PC;
         private readonly ICommonRepository<EstadoDTO> _commonRepository_E;
         private readonly ICommonRepository<UsuarioPlataformaCuenta> _commonRepository_UPC;
-        private readonly ICommonRepository<Historia> _commonRepository_H;
         
         public Billycock_WebRepository(BillycockServiceContext context, ICommonRepository<Usuario> commonRepository_U,
             ICommonRepository<Plataforma> commonRepository_P, ICommonRepository<Cuenta> commonRepository_C,
             ICommonRepository<EstadoDTO> commonRepository_E, ICommonRepository<PlataformaCuenta> commonRepository_PC,
-            ICommonRepository<UsuarioPlataformaCuenta> commonRepository_UPC, ICommonRepository<Historia> commonRepository_H)
+            ICommonRepository<UsuarioPlataformaCuenta> commonRepository_UPC)
         {
             _context = context;
             _commonRepository_U = commonRepository_U;
@@ -37,7 +36,6 @@ namespace Web_Billycock.Repositories.Repositories
             _commonRepository_E = commonRepository_E;
             _commonRepository_PC = commonRepository_PC;
             _commonRepository_UPC = commonRepository_UPC;
-            _commonRepository_H = commonRepository_H;
         }
 
             public async Task<string> InsertUsuario(UsuarioDTO usuario)
@@ -137,9 +135,9 @@ namespace Web_Billycock.Repositories.Repositories
                     mensaje += await _commonRepository_U.InsertObjeto(new Usuario()
                     {
                         descripcion = usuario.descripcion,
-                        fechaInscripcion = SetearFechaTiempo(),
+                        fechaInscripcion = _commonRepository_U.SetearFechaTiempo(),
                         idEstado = 1,
-                        facturacion = ObtenerFechaFacturacionUsuario(),
+                        facturacion = _commonRepository_U.ObtenerFechaFacturacionUsuario(),
                         pago = await ObtenerMontoPagoUsuario(plataformasxusuario)
                     }, _context);
 
@@ -174,10 +172,9 @@ namespace Web_Billycock.Repositories.Repositories
                         }
                     }
                 }
-                catch (Exception ex)
+                catch 
                 {
-                    Console.WriteLine(ex.Message);
-                    return _commonRepository_U.ExceptionMessage(usuario, "C");
+                    mensaje += await _commonRepository_U.ExceptionMessage(usuario, "C");
                 }
                 return mensaje;
             }
@@ -196,9 +193,8 @@ namespace Web_Billycock.Repositories.Repositories
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
-                    return _commonRepository_P.ExceptionMessage(plataforma, "C");
+                    return await _commonRepository_P.ExceptionMessage(plataforma, "C");
                 }
-
             }
             public async Task<string> InsertCuenta(CuentaDTO cuenta)
             {
@@ -219,7 +215,7 @@ namespace Web_Billycock.Repositories.Repositories
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
-                    mensaje += _commonRepository_C.ExceptionMessage(cuenta, "C");
+                    mensaje += await _commonRepository_C.ExceptionMessage(cuenta, "C");
                 }
                 if (mensaje.Contains("CORRECTA"))
                 {
@@ -240,7 +236,7 @@ namespace Web_Billycock.Repositories.Repositories
                             {
                                 idCuenta = account.idCuenta,
                                 idPlataforma = item,
-                                fechaPago = SetearFecha(DateTime.Now),
+                                fechaPago = _commonRepository_C.SetearFecha(DateTime.Now),
                                 usuariosdisponibles = GetPlataformabyId(item, false).Result.numeroMaximoUsuarios
                             });
                             contador++;
@@ -264,36 +260,21 @@ namespace Web_Billycock.Repositories.Repositories
                 return await _commonRepository_UPC.InsertObjeto(usuarioPlataformaCuenta, _context);
             }
             public async Task<string> InsertEstado(EstadoDTO estado)
-    {
-        try
-        {
-            return await _commonRepository_E.InsertObjeto(new EstadoDTO()
-            {
-                descripcion = estado.descripcion
-            }, _context);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.Message);
-            return _commonRepository_E.ExceptionMessage(estado, "C");
-        }
-    }
-            public async Task InsertHistory(T t, string response, BillycockServiceContext _context)
             {
                 try
                 {
-                    await _commonRepository_H.InsertObjeto(new Historia()
+                    return await _commonRepository_E.InsertObjeto(new EstadoDTO()
                     {
-                        Request = JsonConvert.SerializeObject(t),
-                        Response = response,
-                        fecha = SetearFechaTiempo()
+                        descripcion = estado.descripcion
                     }, _context);
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
+                    return await _commonRepository_E.ExceptionMessage(estado, "C");
                 }
             }
+            
 
             public async Task<List<UsuarioDTO>> GetUsuarios(bool complemento)
             {
@@ -843,7 +824,7 @@ namespace Web_Billycock.Repositories.Repositories
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
-                    return _commonRepository_P.ExceptionMessage(plataforma, "U");
+                    return await _commonRepository_P.ExceptionMessage(plataforma, "U");
                 }
             }
             public async Task<string> UpdateCuenta(CuentaDTO cuenta)
@@ -910,7 +891,7 @@ namespace Web_Billycock.Repositories.Repositories
                             {
                                 idPlataforma = item,
                                 idCuenta = cuenta.idCuenta,
-                                fechaPago = SetearFecha(DateTime.Now),
+                                fechaPago = _commonRepository_PC.SetearFecha(DateTime.Now),
                                 usuariosdisponibles = GetPlataformabyId(item, false).Result.numeroMaximoUsuarios
                             });
                         }
@@ -950,7 +931,7 @@ namespace Web_Billycock.Repositories.Repositories
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
-                    return _commonRepository_PC.ExceptionMessage(plataformaCuenta, "U");
+                    return await _commonRepository_PC.ExceptionMessage(plataformaCuenta, "U");
                 }
             }
             public async Task<string> UpdateEstado(EstadoDTO estado)
@@ -967,7 +948,7 @@ namespace Web_Billycock.Repositories.Repositories
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
-                    return _commonRepository_E.ExceptionMessage(estado, "U");
+                    return await _commonRepository_E.ExceptionMessage(estado, "U");
                 }
             }
 
@@ -1058,61 +1039,7 @@ namespace Web_Billycock.Repositories.Repositories
             {
                 return await _commonRepository_E.DeleteObjeto(estado, _context);
             }
-
-            private string ObtenerFechaFacturacionUsuario()
-            {
-                DateTime fechaHoy = DateTime.Now;
-                bool QuincenaMes = fechaHoy.Day <= 15 ? true : false;
-                DateTime oPrimerDiaDelMes = new DateTime(fechaHoy.Year, fechaHoy.Month, 1);
-                
-                if (fechaHoy.Month < 12)
-                {
-                    if (QuincenaMes)
-                    {
-                        return SetearFecha(new DateTime(fechaHoy.Year, fechaHoy.Month, 15).AddMonths(1));
-                    }
-                    else
-                    {
-                        return SetearFecha(oPrimerDiaDelMes.AddMonths(2).AddDays(-1));
-                    }
-                }
-                else
-                {
-                    if (QuincenaMes)
-                    {
-                        return SetearFecha(new DateTime(fechaHoy.Year, fechaHoy.Month, 15).AddMonths(1));
-                    }
-                    else
-                    {
-                        return SetearFecha(oPrimerDiaDelMes.AddMonths(2).AddDays(-1));
-                    }
-                }
-            }
-            private async Task<int> ObtenerMontoPagoUsuario(List<UsuarioPlataformaCuenta> UsuarioPlataformaCuentas)
-            {
-                double acumulado = 0;
-                for (int i = 0; i < UsuarioPlataformaCuentas.Count; i++)
-                {
-                    if (UsuarioPlataformaCuentas[i].cantidad > 1 && UsuarioPlataformaCuentas[i].cantidad < 4) acumulado += await ObtenerPrecioPlataforma(UsuarioPlataformaCuentas[i].idPlataforma) * UsuarioPlataformaCuentas[i].cantidad * 0.85;
-                    else acumulado += await ObtenerPrecioPlataforma(UsuarioPlataformaCuentas[i].idPlataforma) * UsuarioPlataformaCuentas[i].cantidad;
-
-                }
-                if (UsuarioPlataformaCuentas.Count < 4)
-                {
-                    if (UsuarioPlataformaCuentas.Sum(p => p.cantidad) == UsuarioPlataformaCuentas.Count && UsuarioPlataformaCuentas.Count > 1) { acumulado = reprocesoUsuario(UsuarioPlataformaCuentas.Count, acumulado); }     
-                }
-                return Convert.ToInt16(acumulado);
-            }
-            private int reprocesoUsuario(int cuenta, double monto)
-            {
-                return (int)((monto / cuenta) * (cuenta * 0.9));
-            }
-            private async Task<double> ObtenerPrecioPlataforma(int id)
-            {
-                return (await (from p in _context.PLATAFORMA
-                               where p.idPlataforma == id
-                               select p.precio).FirstOrDefaultAsync());
-            }
+            
             public async Task<PlataformaCuentaDTO> GetPlataformaCuentaDisponible(int idPlataforma, int cantidad)
         {
             return await (from pc in _context.PLATAFORMACUENTA
@@ -1128,13 +1055,26 @@ namespace Web_Billycock.Repositories.Repositories
                               clave = pc.clave
                           }).FirstOrDefaultAsync();
         }
-            public string SetearFecha(DateTime fecha)
+            public async Task<int> ObtenerMontoPagoUsuario(List<UsuarioPlataformaCuenta> UsuarioPlataformaCuentas)
             {
-                return fecha.Day.ToString()+"/"+ fecha.Month.ToString()+"/"+ fecha.Year.ToString();
+                double acumulado = 0;
+                for (int i = 0; i < UsuarioPlataformaCuentas.Count; i++)
+                {
+                    if (UsuarioPlataformaCuentas[i].cantidad > 1 && UsuarioPlataformaCuentas[i].cantidad < 4) acumulado += await ObtenerPrecioPlataforma(UsuarioPlataformaCuentas[i].idPlataforma) * UsuarioPlataformaCuentas[i].cantidad * 0.85;
+                    else acumulado += await ObtenerPrecioPlataforma(UsuarioPlataformaCuentas[i].idPlataforma) * UsuarioPlataformaCuentas[i].cantidad;
+
+                }
+                if (UsuarioPlataformaCuentas.Count < 4)
+                {
+                    if (UsuarioPlataformaCuentas.Sum(p => p.cantidad) == UsuarioPlataformaCuentas.Count && UsuarioPlataformaCuentas.Count > 1) { acumulado = _commonRepository_U.reprocesoUsuario(UsuarioPlataformaCuentas.Count, acumulado); }
+                }
+                return Convert.ToInt16(acumulado);
             }
-            public string SetearFechaTiempo()
+            public async Task<double> ObtenerPrecioPlataforma(int id)
             {
-            return DateTime.Now.ToString("dd'/'MM'/'yyyy HH:mm:ss");
+                return (await (from p in _context.PLATAFORMA
+                               where p.idPlataforma == id
+                               select p.precio).FirstOrDefaultAsync());
             }
     }
 }

@@ -18,7 +18,6 @@ namespace Web_Billycock.Repositories.Interfaces
                 Task<string> InsertPlataformaCuenta(PlataformaCuentaDTO plataformaCuenta);
                 Task<string> InsertUsuarioPlataformaCuenta(UsuarioPlataformaCuentaDTO usuarioPlataformaCuenta);
                 Task<string> InsertEstado(EstadoDTO estado);
-                Task InsertHistory(T t, string response, BillycockServiceContext _context);
             #endregion
             #region Read
                 Task<List<UsuarioDTO>> GetUsuarios(bool complemento);

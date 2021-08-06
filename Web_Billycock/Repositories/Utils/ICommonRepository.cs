@@ -12,6 +12,10 @@ namespace Billycock.Utils
         public Task<string> DeleteObjeto(T t, BillycockServiceContext context);
         public Task<string> InsertObjeto(T t, BillycockServiceContext context);
         public Task<string> UpdateObjeto(T t, BillycockServiceContext context);
-        public string ExceptionMessage(T t, string MessageType);
+        public Task<string> ExceptionMessage(T t, string MessageType);
+        public string ObtenerFechaFacturacionUsuario();
+        public int reprocesoUsuario(int cuenta, double monto);
+        public string SetearFecha(DateTime fecha);
+        public string SetearFechaTiempo();
     }
 }
