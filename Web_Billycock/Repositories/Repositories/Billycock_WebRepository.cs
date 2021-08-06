@@ -924,7 +924,7 @@ namespace Web_Billycock.Repositories.Repositories
                         idCuenta = platformAccount.idCuenta,
                         idPlataforma = platformAccount.idPlataforma,
                         fechaPago = plataformaCuenta.fechaPago == null ? plataformaCuenta.fechaxActualizar : platformAccount.fechaPago,
-                        usuariosdisponibles = platformAccount.usuariosdisponibles,
+                        usuariosdisponibles = plataformaCuenta.usuariosdisponibles != platformAccount.usuariosdisponibles ? plataformaCuenta.usuariosdisponibles : platformAccount.usuariosdisponibles,
                         clave = plataformaCuenta.clave != platformAccount.clave ? plataformaCuenta.clave : platformAccount.clave
                     }, _context);
                 }
