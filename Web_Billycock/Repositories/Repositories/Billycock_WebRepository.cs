@@ -650,87 +650,87 @@ namespace Web_Billycock.Repositories.Repositories
             {
                 List<UsuarioPlataformaCuentaDTO> usuarioPlataformaCuentas = new List<UsuarioPlataformaCuentaDTO>();
                 string[] array;
-            if (tipo == 1)
-            {
-                usuarioPlataformaCuentas = await (from upc in _context.USUARIOPLATAFORMACUENTA
-                                                    orderby upc.idUsuario
-                                                    select new UsuarioPlataformaCuentaDTO()
-                                                    {
-                                                        idUsuarioPlataformaCuenta = upc.idUsuarioPlataformaCuenta,
-                                                        idUsuario = upc.idUsuario,
-                                                        idPlataforma = upc.idPlataforma,
-                                                        idCuenta = upc.idCuenta,
-                                                        cantidad = upc.cantidad
-                                                    }).ToListAsync();
-            }
-            else if (tipo == 2)
-            {
-                array = dato.Split("-");
-                usuarioPlataformaCuentas = await (from upc in _context.USUARIOPLATAFORMACUENTA
-                                                    where upc.idUsuario == int.Parse(array[0])
-                                                    && upc.idPlataforma == int.Parse(array[1])
-                                                    && upc.idCuenta == int.Parse(array[2])
-                                                    orderby upc.idUsuario
-                                                    select new UsuarioPlataformaCuentaDTO()
-                                                    {
-                                                        idUsuarioPlataformaCuenta = upc.idUsuarioPlataformaCuenta,
-                                                        idUsuario = upc.idUsuario,
-                                                        idPlataforma = upc.idPlataforma,
-                                                        idCuenta = upc.idCuenta,
-                                                        cantidad = upc.cantidad
-                                                    }).ToListAsync();
-            }
-            else if (tipo == 3)
-            {
-                usuarioPlataformaCuentas = await (from upc in _context.USUARIOPLATAFORMACUENTA
-                                                    where upc.idUsuario == int.Parse(dato)
-                                                    orderby upc.idUsuario
-                                                    select new UsuarioPlataformaCuentaDTO()
-                                                    {
-                                                        idUsuarioPlataformaCuenta = upc.idUsuarioPlataformaCuenta,
-                                                        idUsuario = upc.idUsuario,
-                                                        idPlataforma = upc.idPlataforma,
-                                                        idCuenta = upc.idCuenta,
-                                                        cantidad = upc.cantidad
-                                                    }).ToListAsync();
-            }
-            else if (tipo == 4)
-            {
-                usuarioPlataformaCuentas = await (from upc in _context.USUARIOPLATAFORMACUENTA
-                                                    where upc.idPlataforma == int.Parse(dato)
-                                                    orderby upc.idPlataforma
-                                                    select new UsuarioPlataformaCuentaDTO()
-                                                    {
-                                                        idUsuarioPlataformaCuenta = upc.idUsuarioPlataformaCuenta,
-                                                        idUsuario = upc.idUsuario,
-                                                        idPlataforma = upc.idPlataforma,
-                                                        idCuenta = upc.idCuenta,
-                                                        cantidad = upc.cantidad
-                                                    }).ToListAsync();
-            }
-            else
-            {
-                usuarioPlataformaCuentas = await (from upc in _context.USUARIOPLATAFORMACUENTA
-                                                    where upc.idCuenta == int.Parse(dato)
-                                                    orderby upc.idCuenta
-                                                    select new UsuarioPlataformaCuentaDTO()
-                                                    {
-                                                        idUsuarioPlataformaCuenta = upc.idUsuarioPlataformaCuenta,
-                                                        idUsuario = upc.idUsuario,
-                                                        idPlataforma = upc.idPlataforma,
-                                                        idCuenta = upc.idCuenta,
-                                                        cantidad = upc.cantidad
-                                                    }).ToListAsync();
-        }
-        //if (complemento)
-        //{
-        //    foreach (var _plataformaCuenta in plataformaCuentas)
-        //    {
-        //        _plataformaCuenta.Cuenta = await GetCuentabyId(_plataformaCuenta.idCuenta, false);
-        //        _plataformaCuenta.Plataforma = await GetPlataformabyId(_plataformaCuenta.idPlataforma, false);
-        //    }
-        //}
-        return usuarioPlataformaCuentas;
+                if (tipo == 1)
+                {
+                    usuarioPlataformaCuentas = await (from upc in _context.USUARIOPLATAFORMACUENTA
+                                                        orderby upc.idUsuario
+                                                        select new UsuarioPlataformaCuentaDTO()
+                                                        {
+                                                            idUsuarioPlataformaCuenta = upc.idUsuarioPlataformaCuenta,
+                                                            idUsuario = upc.idUsuario,
+                                                            idPlataforma = upc.idPlataforma,
+                                                            idCuenta = upc.idCuenta,
+                                                            cantidad = upc.cantidad
+                                                        }).ToListAsync();
+                }
+                else if (tipo == 2)
+                {
+                    array = dato.Split("-");
+                    usuarioPlataformaCuentas = await (from upc in _context.USUARIOPLATAFORMACUENTA
+                                                        where upc.idUsuario == int.Parse(array[0])
+                                                        && upc.idPlataforma == int.Parse(array[1])
+                                                        && upc.idCuenta == int.Parse(array[2])
+                                                        orderby upc.idUsuario
+                                                        select new UsuarioPlataformaCuentaDTO()
+                                                        {
+                                                            idUsuarioPlataformaCuenta = upc.idUsuarioPlataformaCuenta,
+                                                            idUsuario = upc.idUsuario,
+                                                            idPlataforma = upc.idPlataforma,
+                                                            idCuenta = upc.idCuenta,
+                                                            cantidad = upc.cantidad
+                                                        }).ToListAsync();
+                }
+                else if (tipo == 3)
+                {
+                    usuarioPlataformaCuentas = await (from upc in _context.USUARIOPLATAFORMACUENTA
+                                                        where upc.idUsuario == int.Parse(dato)
+                                                        orderby upc.idUsuario
+                                                        select new UsuarioPlataformaCuentaDTO()
+                                                        {
+                                                            idUsuarioPlataformaCuenta = upc.idUsuarioPlataformaCuenta,
+                                                            idUsuario = upc.idUsuario,
+                                                            idPlataforma = upc.idPlataforma,
+                                                            idCuenta = upc.idCuenta,
+                                                            cantidad = upc.cantidad
+                                                        }).ToListAsync();
+                }
+                else if (tipo == 4)
+                {
+                    usuarioPlataformaCuentas = await (from upc in _context.USUARIOPLATAFORMACUENTA
+                                                        where upc.idPlataforma == int.Parse(dato)
+                                                        orderby upc.idPlataforma
+                                                        select new UsuarioPlataformaCuentaDTO()
+                                                        {
+                                                            idUsuarioPlataformaCuenta = upc.idUsuarioPlataformaCuenta,
+                                                            idUsuario = upc.idUsuario,
+                                                            idPlataforma = upc.idPlataforma,
+                                                            idCuenta = upc.idCuenta,
+                                                            cantidad = upc.cantidad
+                                                        }).ToListAsync();
+                }
+                else
+                {
+                    usuarioPlataformaCuentas = await (from upc in _context.USUARIOPLATAFORMACUENTA
+                                                        where upc.idCuenta == int.Parse(dato)
+                                                        orderby upc.idCuenta
+                                                        select new UsuarioPlataformaCuentaDTO()
+                                                        {
+                                                            idUsuarioPlataformaCuenta = upc.idUsuarioPlataformaCuenta,
+                                                            idUsuario = upc.idUsuario,
+                                                            idPlataforma = upc.idPlataforma,
+                                                            idCuenta = upc.idCuenta,
+                                                            cantidad = upc.cantidad
+                                                        }).ToListAsync();
+                }
+                //if (complemento)
+                //{
+                //    foreach (var _plataformaCuenta in plataformaCuentas)
+                //    {
+                //        _plataformaCuenta.Cuenta = await GetCuentabyId(_plataformaCuenta.idCuenta, false);
+                //        _plataformaCuenta.Plataforma = await GetPlataformabyId(_plataformaCuenta.idPlataforma, false);
+                //    }
+                //}
+                return usuarioPlataformaCuentas;
             }
 
             public async Task<List<EstadoDTO>> GetEstados()
@@ -924,7 +924,7 @@ namespace Web_Billycock.Repositories.Repositories
                         idCuenta = platformAccount.idCuenta,
                         idPlataforma = platformAccount.idPlataforma,
                         fechaPago = plataformaCuenta.fechaPago == null ? plataformaCuenta.fechaxActualizar : platformAccount.fechaPago,
-                        usuariosdisponibles = plataformaCuenta.usuariosdisponibles != platformAccount.usuariosdisponibles ? plataformaCuenta.usuariosdisponibles : platformAccount.usuariosdisponibles,
+                        usuariosdisponibles = platformAccount.usuariosdisponibles,
                         clave = plataformaCuenta.clave != platformAccount.clave ? plataformaCuenta.clave : platformAccount.clave
                     }, _context);
                 }
@@ -1029,6 +1029,7 @@ namespace Web_Billycock.Repositories.Repositories
             }
             public async Task<string> DeletePlataformaCuenta(PlataformaCuentaDTO plataformaCuenta)
             {
+                plataformaCuenta.idPlataformaCuenta = plataformaCuenta.idPlataforma + "-" + plataformaCuenta.idCuenta;
                 return await _commonRepository_PC.DeleteObjeto(plataformaCuenta, _context);
             }
             public async Task<string> DeleteUsuarioPlataformaCuenta(UsuarioPlataformaCuentaDTO usuarioPlataformaCuenta)
@@ -1041,20 +1042,20 @@ namespace Web_Billycock.Repositories.Repositories
             }
             
             public async Task<PlataformaCuentaDTO> GetPlataformaCuentaDisponible(int idPlataforma, int cantidad)
-        {
-            return await (from pc in _context.PLATAFORMACUENTA
-                          join c in _context.CUENTA on pc.idCuenta equals c.idCuenta
-                          where pc.idPlataforma == idPlataforma && pc.usuariosdisponibles >= cantidad && c.idEstado != 2
-                          select new PlataformaCuentaDTO()
-                          {
-                              idPlataformaCuenta = pc.idPlataformaCuenta,
-                              idCuenta = pc.idCuenta,
-                              idPlataforma = pc.idPlataforma,
-                              usuariosdisponibles = pc.usuariosdisponibles,
-                              fechaPago = pc.fechaPago,
-                              clave = pc.clave
-                          }).FirstOrDefaultAsync();
-        }
+            {
+                return await (from pc in _context.PLATAFORMACUENTA
+                              join c in _context.CUENTA on pc.idCuenta equals c.idCuenta
+                              where pc.idPlataforma == idPlataforma && pc.usuariosdisponibles >= cantidad && c.idEstado != 2
+                              select new PlataformaCuentaDTO()
+                              {
+                                  idPlataformaCuenta = pc.idPlataformaCuenta,
+                                  idCuenta = pc.idCuenta,
+                                  idPlataforma = pc.idPlataforma,
+                                  usuariosdisponibles = pc.usuariosdisponibles,
+                                  fechaPago = pc.fechaPago,
+                                  clave = pc.clave
+                              }).FirstOrDefaultAsync();
+            }
             public async Task<int> ObtenerMontoPagoUsuario(List<UsuarioPlataformaCuenta> UsuarioPlataformaCuentas)
             {
                 double acumulado = 0;
