@@ -240,7 +240,7 @@ namespace Web_Billycock.Repositories.Repositories
                             {
                                 idCuenta = account.idCuenta,
                                 idPlataforma = item,
-                                fechaPago = DateTime.Now.ToShortDateString(),
+                                fechaPago = SetearFecha(DateTime.Now),
                                 usuariosdisponibles = GetPlataformabyId(item, false).Result.numeroMaximoUsuarios
                             });
                             contador++;
@@ -910,7 +910,7 @@ namespace Web_Billycock.Repositories.Repositories
                             {
                                 idPlataforma = item,
                                 idCuenta = cuenta.idCuenta,
-                                fechaPago = DateTime.Now.ToShortDateString(),
+                                fechaPago = SetearFecha(DateTime.Now),
                                 usuariosdisponibles = GetPlataformabyId(item, false).Result.numeroMaximoUsuarios
                             });
                         }
