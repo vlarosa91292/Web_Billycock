@@ -431,7 +431,7 @@ namespace Web_Billycock.Repositories.Repositories
                                 else if (_plataforma.idPlataforma == 4) _cuenta.hbo = true;
                                 else if (_plataforma.idPlataforma == 5) _cuenta.youtube = true;
                                 else _cuenta.spotify = true;
-                                plataformaCuentas.Add(await GetPlataformaCuentabyIds(_plataforma.idPlataforma + "-" + _cuenta.idCuenta,false));
+                                plataformaCuentas.Add(await GetPlataformaCuentabyIds(_plataforma.idPlataforma + "-" + _cuenta.idCuenta,true));
                             }
                         }
                         _cuenta.plataformaCuentas = plataformaCuentas;

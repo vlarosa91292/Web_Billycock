@@ -78,6 +78,50 @@
         </dd>
     </dl>
 </div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                ID Plataforma
+            </th>
+            <th>
+                Usuarios disponibles
+            </th>
+            <th>
+                Fecha Pago
+            </th>
+            <th>
+                Clave
+            </th>
+            <th>
+                Nombre de Plataforma
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.plataformaCuentas)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.idPlataformaCuenta)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.usuariosdisponibles)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.fechaPago)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.clave)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Plataforma.descripcion)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.idCuenta">Edit</a> |
     <a asp-action="Index">Back to List</a>
