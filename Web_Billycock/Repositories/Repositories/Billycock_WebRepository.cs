@@ -211,53 +211,84 @@ namespace Web_Billycock.Repositories.Repositories
                         correo = cuenta.correo,
                         idEstado = 1
                     }, _context);
+                    if (mensaje.Contains("CORRECTA"))
+                    {
+                        mensaje += Environment.NewLine;
+                        try
+                        {
+                            if (cuenta.netflix) idPlataformas.Add(1);
+                            if (cuenta.amazon) idPlataformas.Add(2);
+                            if (cuenta.disney) idPlataformas.Add(3);
+                            if (cuenta.hbo) idPlataformas.Add(4);
+                            if (cuenta.youtube) idPlataformas.Add(5);
+                            if (cuenta.spotify) idPlataformas.Add(6);
+                            account = await GetCuentabyName(cuenta.correo, false);
+                            foreach (var item in idPlataformas)
+                            {
+                                if (contador >= 1) mensaje += Environment.NewLine;
+                                mensaje += await InsertPlataformaCuenta(new PlataformaCuentaDTO()
+                                {
+                                    idCuenta = account.idCuenta,
+                                    idPlataforma = item,
+                                    fechaPago = _commonRepository_C.SetearFecha(DateTime.Now),
+                                    usuariosdisponibles = GetPlataformabyId(item, false).Result.numeroMaximoUsuarios
+                                });
+                                contador++;
+                            }
+                        }
+                        catch
+                        {
+                            mensaje += _commonRepository_C.ExceptionMessage(cuenta, "C");
+                        }
+                    }
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
                     mensaje += await _commonRepository_C.ExceptionMessage(cuenta, "C");
                 }
-                if (mensaje.Contains("CORRECTA"))
-                {
-                    mensaje += Environment.NewLine;
-                    try
-                    {
-                        if (cuenta.netflix) idPlataformas.Add(1);
-                        if (cuenta.amazon) idPlataformas.Add(2);
-                        if (cuenta.disney) idPlataformas.Add(3);
-                        if (cuenta.hbo) idPlataformas.Add(4);
-                        if (cuenta.youtube) idPlataformas.Add(5);
-                        if (cuenta.spotify) idPlataformas.Add(6);
-                        account = await GetCuentabyName(cuenta.correo, false);
-                        foreach (var item in idPlataformas)
-                        {
-                            if (contador >= 1) mensaje += Environment.NewLine;
-                            mensaje += await InsertPlataformaCuenta(new PlataformaCuentaDTO()
-                            {
-                                idCuenta = account.idCuenta,
-                                idPlataforma = item,
-                                fechaPago = _commonRepository_C.SetearFecha(DateTime.Now),
-                                usuariosdisponibles = GetPlataformabyId(item, false).Result.numeroMaximoUsuarios
-                            });
-                            contador++;
-                        }
-                    }
-                    catch
-                    {
-                        mensaje += _commonRepository_C.ExceptionMessage(cuenta, "C");
-                    }
-                }
                 return mensaje;
             }
             public async Task<string> InsertPlataformaCuenta(PlataformaCuentaDTO plataformaCuenta)
             {
-                plataformaCuenta.idPlataformaCuenta = plataformaCuenta.idPlataforma + "-" + plataformaCuenta.idCuenta;
-                return await _commonRepository_PC.InsertObjeto(plataformaCuenta, _context);
+                try
+                {
+                    plataformaCuenta.idPlataformaCuenta = plataformaCuenta.idPlataforma + "-" + plataformaCuenta.idCuenta;
+                    return await _commonRepository_PC.InsertObjeto(new PlataformaCuenta()
+                    {
+                        idPlataformaCuenta = plataformaCuenta.idPlataformaCuenta,
+                        idPlataforma = plataformaCuenta.idPlataforma,
+                        idCuenta = plataformaCuenta.idCuenta,
+                        fechaPago = plataformaCuenta.fechaPago,
+                        clave = plataformaCuenta.clave,
+                        usuariosdisponibles = plataformaCuenta.usuariosdisponibles
+                    }, _context);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    return await _commonRepository_PC.ExceptionMessage(plataformaCuenta, "C");
+                }
             }
             public async Task<string> InsertUsuarioPlataformaCuenta(UsuarioPlataformaCuentaDTO usuarioPlataformaCuenta)
             {
-                usuarioPlataformaCuenta.idUsuarioPlataformaCuenta = usuarioPlataformaCuenta.idUsuario + "-" + usuarioPlataformaCuenta.idPlataforma + "-" + usuarioPlataformaCuenta.idCuenta;
-                return await _commonRepository_UPC.InsertObjeto(usuarioPlataformaCuenta, _context);
+                try
+                {
+                    usuarioPlataformaCuenta.idUsuarioPlataformaCuenta = usuarioPlataformaCuenta.idUsuario + "-" + usuarioPlataformaCuenta.idPlataforma + "-" + usuarioPlataformaCuenta.idCuenta;
+                    return await _commonRepository_UPC.InsertObjeto(new UsuarioPlataformaCuenta()
+                    {
+                        idUsuarioPlataformaCuenta = usuarioPlataformaCuenta.idUsuarioPlataformaCuenta,
+                        idUsuario = usuarioPlataformaCuenta.idUsuario,
+                        idPlataforma = usuarioPlataformaCuenta.idPlataforma,
+                        idCuenta = usuarioPlataformaCuenta.idCuenta,
+                        cantidad = usuarioPlataformaCuenta.cantidad
+                    }, _context);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    return await _commonRepository_UPC.ExceptionMessage(usuarioPlataformaCuenta, "C");
+                }
             }
             public async Task<string> InsertEstado(EstadoDTO estado)
             {
@@ -785,33 +816,33 @@ namespace Web_Billycock.Repositories.Repositories
             }
             
             public async Task<string> UpdateUsuario(UsuarioDTO usuario)
-                {
-                    string mensaje = string.Empty;
-                    UsuarioDTO user = await GetUsuariobyId(usuario.idUsuario, false);
-                    try
-                    {
-                        mensaje += await _commonRepository_U.UpdateObjeto(new Usuario()
-                        {
-                            idUsuario = user.idUsuario,
-                            descripcion = usuario.descripcion,
-                            idEstado = usuario.idEstado,
-                            fechaInscripcion = user.fechaInscripcion,
-                            facturacion = usuario.facturacion,
-                            pago = usuario.pago
-                        }, _context);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                        mensaje += _commonRepository_U.ExceptionMessage(usuario, "U");
-                    }
-                    return mensaje;
-                }
-            public async Task<string> UpdatePlataforma(PlataformaDTO plataforma)
             {
-                PlataformaDTO platform = await GetPlataformabyId(plataforma.idPlataforma, false);
+                string mensaje = string.Empty;
                 try
                 {
+                    UsuarioDTO user = await GetUsuariobyId(usuario.idUsuario, false);
+                    mensaje += await _commonRepository_U.UpdateObjeto(new Usuario()
+                    {
+                        idUsuario = user.idUsuario,
+                        descripcion = usuario.descripcion,
+                        idEstado = usuario.idEstado,
+                        fechaInscripcion = user.fechaInscripcion,
+                        facturacion = usuario.facturacion,
+                        pago = usuario.pago
+                    }, _context);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    mensaje += _commonRepository_U.ExceptionMessage(usuario, "U");
+                }
+                return mensaje;
+            }
+            public async Task<string> UpdatePlataforma(PlataformaDTO plataforma)
+            {
+                try
+                {
+                    PlataformaDTO platform = await GetPlataformabyId(plataforma.idPlataforma, false);
                     return await _commonRepository_P.UpdateObjeto(new PlataformaDTO()
                     {
                         idPlataforma = platform.idPlataforma,
@@ -833,9 +864,9 @@ namespace Web_Billycock.Repositories.Repositories
                 List<int> idPlataformasAgregar = new List<int>();
                 List<int> idPlataformasEliminar = new List<int>();
 
-                CuentaDTO account = await GetCuentabyId(cuenta.idCuenta, true);
                 try
                 {
+                    CuentaDTO account = await GetCuentabyId(cuenta.idCuenta, true);
                     mensaje += await _commonRepository_C.UpdateObjeto(new Cuenta()
                     {
                         idCuenta = account.idCuenta,
@@ -843,16 +874,8 @@ namespace Web_Billycock.Repositories.Repositories
                         correo = cuenta.correo,
                         idEstado = cuenta.idEstado
                     }, _context);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                    mensaje += _commonRepository_C.ExceptionMessage(cuenta, "U");
-                }
 
-                if (mensaje.Contains("CORRECTA"))
-                {
-                    try
+                    if (mensaje.Contains("CORRECTA"))
                     {
                         if (cuenta.netflix != account.netflix)
                         {
@@ -905,19 +928,19 @@ namespace Web_Billycock.Repositories.Repositories
                             });
                         }
                     }
-                    catch
-                    {
-                        mensaje += "ERROR EN LA ACTUALIZACION DE PLATAFORMAS EN CUENTA-SERVER";
-                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    mensaje += _commonRepository_C.ExceptionMessage(cuenta, "U");
                 }
                 return mensaje;
             }
             public async Task<string> UpdatePlataformaCuenta(PlataformaCuentaDTO plataformaCuenta)
             {
-                PlataformaCuentaDTO platformAccount = await GetPlataformaCuentabyIds(plataformaCuenta.idPlataformaCuenta,false);
-                    
                 try
                 {
+                    PlataformaCuentaDTO platformAccount = await GetPlataformaCuentabyIds(plataformaCuenta.idPlataformaCuenta,false);
                     return await _commonRepository_PC.UpdateObjeto(new PlataformaCuenta()
                     {
                         idPlataformaCuenta = platformAccount.idPlataformaCuenta,
@@ -955,10 +978,10 @@ namespace Web_Billycock.Repositories.Repositories
             public async Task<string> DeleteUsuario(UsuarioDTO usuario)
             {
                 string mensaje = string.Empty;
-                UsuarioDTO user = await GetUsuariobyId(usuario.idUsuario, false);
                 List<UsuarioPlataformaCuentaDTO> usuarioplataformacuentas;
                 try
                 {
+                    UsuarioDTO user = await GetUsuariobyId(usuario.idUsuario, false);
                     mensaje += await _commonRepository_U.DeleteLogicoObjeto(new Usuario()
                     {
                         idUsuario = user.idUsuario,
@@ -987,9 +1010,9 @@ namespace Web_Billycock.Repositories.Repositories
             public async Task<string> DeletePlataforma(PlataformaDTO plataforma)
             {
                 string mensaje = string.Empty;
-                PlataformaDTO account = await GetPlataformabyId(plataforma.idPlataforma, false);
                 try
                 {
+                    PlataformaDTO account = await GetPlataformabyId(plataforma.idPlataforma, false);
                     mensaje += await _commonRepository_P.DeleteLogicoObjeto(new PlataformaDTO()
                     {
                         idPlataforma = account.idPlataforma,
@@ -1009,9 +1032,9 @@ namespace Web_Billycock.Repositories.Repositories
             public async Task<string> DeleteCuenta(CuentaDTO cuenta)
             {
                 string mensaje=string.Empty;
-                CuentaDTO account = await GetCuentabyId(cuenta.idCuenta, false);
                 try
                 {
+                    CuentaDTO account = await GetCuentabyId(cuenta.idCuenta, false);
                     mensaje += await _commonRepository_C.DeleteLogicoObjeto(new Cuenta()
                     {
                         idCuenta = account.idCuenta,
@@ -1029,16 +1052,55 @@ namespace Web_Billycock.Repositories.Repositories
             }
             public async Task<string> DeletePlataformaCuenta(PlataformaCuentaDTO plataformaCuenta)
             {
-                plataformaCuenta.idPlataformaCuenta = plataformaCuenta.idPlataforma + "-" + plataformaCuenta.idCuenta;
-                return await _commonRepository_PC.DeleteObjeto(plataformaCuenta, _context);
+                try
+                {
+                    plataformaCuenta.idPlataformaCuenta = plataformaCuenta.idPlataforma + "-" + plataformaCuenta.idCuenta;
+                    return await _commonRepository_PC.DeleteObjeto(new PlataformaCuenta()
+                    {
+                        idPlataformaCuenta = plataformaCuenta.idPlataformaCuenta,
+                        idPlataforma = plataformaCuenta.idPlataforma,
+                        idCuenta = plataformaCuenta.idCuenta,
+                        fechaPago = plataformaCuenta.fechaPago,
+                        clave = plataformaCuenta.clave,
+                        usuariosdisponibles = plataformaCuenta.usuariosdisponibles
+                    }, _context);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    return await _commonRepository_PC.ExceptionMessage(plataformaCuenta, "D");
+                }
             }
             public async Task<string> DeleteUsuarioPlataformaCuenta(UsuarioPlataformaCuentaDTO usuarioPlataformaCuenta)
             {
-                return await _commonRepository_UPC.DeleteObjeto(usuarioPlataformaCuenta, _context);
+                try
+                {
+                    return await _commonRepository_UPC.DeleteObjeto(new UsuarioPlataformaCuenta()
+                    {
+                        idUsuarioPlataformaCuenta = usuarioPlataformaCuenta.idUsuarioPlataformaCuenta,
+                        idUsuario = usuarioPlataformaCuenta.idUsuario,
+                        idPlataforma = usuarioPlataformaCuenta.idPlataforma,
+                        idCuenta = usuarioPlataformaCuenta.idCuenta,
+                        cantidad = usuarioPlataformaCuenta.cantidad
+                    }, _context);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    return await _commonRepository_UPC.ExceptionMessage(usuarioPlataformaCuenta, "D");
+                }
             }
             public async Task<string> DeleteEstado(EstadoDTO estado)
             {
-                return await _commonRepository_E.DeleteObjeto(estado, _context);
+                try
+                {
+                    return await _commonRepository_E.DeleteObjeto(estado, _context);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    return await _commonRepository_E.ExceptionMessage(estado, "D");
+                }
             }
             
             public async Task<PlataformaCuentaDTO> GetPlataformaCuentaDisponible(int idPlataforma, int cantidad)
