@@ -21,12 +21,12 @@ namespace Web_Billycock.Repositories.Repositories
         private readonly ICommonRepository<Plataforma> _commonRepository_P;
         private readonly ICommonRepository<Cuenta> _commonRepository_C;
         private readonly ICommonRepository<PlataformaCuenta> _commonRepository_PC;
-        private readonly ICommonRepository<EstadoDTO> _commonRepository_E;
+        private readonly ICommonRepository<Estado> _commonRepository_E;
         private readonly ICommonRepository<UsuarioPlataformaCuenta> _commonRepository_UPC;
         
         public Billycock_WebRepository(BillycockServiceContext context, ICommonRepository<Usuario> commonRepository_U,
             ICommonRepository<Plataforma> commonRepository_P, ICommonRepository<Cuenta> commonRepository_C,
-            ICommonRepository<EstadoDTO> commonRepository_E, ICommonRepository<PlataformaCuenta> commonRepository_PC,
+            ICommonRepository<Estado> commonRepository_E, ICommonRepository<PlataformaCuenta> commonRepository_PC,
             ICommonRepository<UsuarioPlataformaCuenta> commonRepository_UPC)
         {
             _context = context;
@@ -305,7 +305,6 @@ namespace Web_Billycock.Repositories.Repositories
                     return await _commonRepository_E.ExceptionMessage(estado, "C");
                 }
             }
-            
 
             public async Task<List<UsuarioDTO>> GetUsuarios(bool complemento)
             {
@@ -370,7 +369,8 @@ namespace Web_Billycock.Repositories.Repositories
                                                 idEstado = u.idEstado,
                                                 descEstado = (from e in _context.ESTADO where e.idEstado == u.idEstado select e.descripcion).FirstOrDefault(),
                                                 facturacion = u.facturacion,
-                                                pago = u.pago
+                                                pago = u.pago,
+                                                
                                             }).ToListAsync();
 
                     }
@@ -670,11 +670,13 @@ namespace Web_Billycock.Repositories.Repositories
             {
                 return (await ObtenerUsuarioPlataformaCuentas(5, id, complemento));
             }
-            public async Task<bool> UsuarioPlataformaCuentaExists(string idPlataformaCuenta)
+            public async Task<bool> UsuarioPlataformaCuentaExists(string idUsuarioPlataformaCuenta)
             {
-                int idPlataforma = int.Parse(idPlataformaCuenta.Split("-")[0]);
-                int idCuenta = int.Parse(idPlataformaCuenta.Split("-")[1]);
-                return await _context.PLATAFORMACUENTA.AnyAsync(e => e.idPlataforma == idPlataforma
+                int idUsuario = int.Parse(idUsuarioPlataformaCuenta.Split("-")[0]);
+                int idPlataforma = int.Parse(idUsuarioPlataformaCuenta.Split("-")[1]);
+                int idCuenta = int.Parse(idUsuarioPlataformaCuenta.Split("-")[2]);
+                return await _context.USUARIOPLATAFORMACUENTA.AnyAsync(e => e.idUsuario == idUsuario
+                                                                    && e.idPlataforma == idPlataforma
                                                                     && e.idCuenta == idCuenta);
             }
             public async Task<List<UsuarioPlataformaCuentaDTO>> ObtenerUsuarioPlataformaCuentas(int tipo, string dato, bool complemento)
@@ -818,6 +820,7 @@ namespace Web_Billycock.Repositories.Repositories
             public async Task<string> UpdateUsuario(UsuarioDTO usuario)
             {
                 string mensaje = string.Empty;
+                List<UsuarioPlataformaCuentaDTO> usuarioplataformacuentas;
                 try
                 {
                     UsuarioDTO user = await GetUsuariobyId(usuario.idUsuario, false);
@@ -825,11 +828,23 @@ namespace Web_Billycock.Repositories.Repositories
                     {
                         idUsuario = user.idUsuario,
                         descripcion = usuario.descripcion,
-                        idEstado = usuario.idEstado,
+                        idEstado = user.idEstado,
                         fechaInscripcion = user.fechaInscripcion,
                         facturacion = usuario.facturacion,
                         pago = usuario.pago
                     }, _context);
+
+                    /*usuarioplataformacuentas = await GetUsuarioPlataformaCuentasbyIdUsuario(usuario.idUsuario.ToString(), false);
+                    foreach (var item in usuarioplataformacuentas)
+                    {
+                        mensaje += Environment.NewLine;
+                        PlataformaCuentaDTO platformAccount = await GetPlataformaCuentabyIds(item.idPlataforma + "-" + item.idCuenta, false);
+                        platformAccount.usuariosdisponibles += item.cantidad;
+                        mensaje += await UpdatePlataformaCuenta(platformAccount);
+
+                        mensaje += Environment.NewLine;
+                        mensaje += await DeleteUsuarioPlataformaCuenta(item);
+                    }*/
                 }
                 catch (Exception ex)
                 {
@@ -847,7 +862,7 @@ namespace Web_Billycock.Repositories.Repositories
                     {
                         idPlataforma = platform.idPlataforma,
                         descripcion = plataforma.descripcion,
-                        idEstado = plataforma.idEstado,
+                        idEstado = platform.idEstado,
                         numeroMaximoUsuarios = plataforma.numeroMaximoUsuarios,
                         precio = plataforma.precio
                     }, _context);
@@ -872,7 +887,7 @@ namespace Web_Billycock.Repositories.Repositories
                         idCuenta = account.idCuenta,
                         diminutivo = cuenta.diminutivo,
                         correo = cuenta.correo,
-                        idEstado = cuenta.idEstado
+                        idEstado = account.idEstado
                     }, _context);
 
                     if (mensaje.Contains("CORRECTA"))
@@ -991,14 +1006,17 @@ namespace Web_Billycock.Repositories.Repositories
                         facturacion = user.facturacion,
                         pago = user.pago
                     }, _context);
-                    usuarioplataformacuentas = await GetUsuarioPlataformaCuentasbyIdUsuario(GetUsuariobyName(usuario.descripcion,false).Result.idUsuario.ToString(),false);
+                    usuarioplataformacuentas = await GetUsuarioPlataformaCuentasbyIdUsuario(usuario.idUsuario.ToString(),false);
                     foreach (var item in usuarioplataformacuentas)
                     {
                         mensaje += Environment.NewLine;
-                        PlataformaCuentaDTO platformAccount = await GetPlataformaCuentabyIds(item.Plataforma+"-"+item.idCuenta,false);
+                        PlataformaCuentaDTO platformAccount = await GetPlataformaCuentabyIds(item.idPlataforma+"-"+item.idCuenta,false);
                         platformAccount.usuariosdisponibles += item.cantidad;
                         mensaje += await UpdatePlataformaCuenta(platformAccount);
-                    }
+
+                        mensaje += Environment.NewLine;
+                        mensaje += await DeleteUsuarioPlataformaCuenta(item);
+                     }
                 }
                 catch (Exception ex)
                 {
@@ -1009,18 +1027,32 @@ namespace Web_Billycock.Repositories.Repositories
             }
             public async Task<string> DeletePlataforma(PlataformaDTO plataforma)
             {
+                List<UsuarioPlataformaCuentaDTO> usuarioplataformacuentas;
+                List<PlataformaCuentaDTO> plataformacuentas;
                 string mensaje = string.Empty;
                 try
                 {
-                    PlataformaDTO account = await GetPlataformabyId(plataforma.idPlataforma, false);
-                    mensaje += await _commonRepository_P.DeleteLogicoObjeto(new PlataformaDTO()
+                    PlataformaDTO platform = await GetPlataformabyId(plataforma.idPlataforma, false);
+                    mensaje += await _commonRepository_P.DeleteLogicoObjeto(new Plataforma()
                     {
-                        idPlataforma = account.idPlataforma,
+                        idPlataforma = platform.idPlataforma,
                         descripcion = plataforma.descripcion,
                         idEstado = 2,
-                        numeroMaximoUsuarios = account.numeroMaximoUsuarios,
-                        precio = account.precio
+                        numeroMaximoUsuarios = platform.numeroMaximoUsuarios,
+                        precio = platform.precio
                     }, _context);
+                    usuarioplataformacuentas = await GetUsuarioPlataformaCuentasbyIdPlataforma(plataforma.idPlataforma.ToString(), false);
+                    foreach (var item in usuarioplataformacuentas)
+                    {
+                        mensaje += Environment.NewLine;
+                        mensaje += await DeleteUsuarioPlataformaCuenta(item);
+                    }
+                    plataformacuentas = await GetPlataformaCuentasbyIdCuenta(plataforma.idPlataforma.ToString(), false);
+                    foreach (var item in plataformacuentas)
+                    {
+                        mensaje += Environment.NewLine;
+                        mensaje += await DeletePlataformaCuenta(item);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -1031,6 +1063,8 @@ namespace Web_Billycock.Repositories.Repositories
             }
             public async Task<string> DeleteCuenta(CuentaDTO cuenta)
             {
+                List<UsuarioPlataformaCuentaDTO> usuarioplataformacuentas;
+                List<PlataformaCuentaDTO> plataformacuentas;
                 string mensaje=string.Empty;
                 try
                 {
@@ -1042,7 +1076,19 @@ namespace Web_Billycock.Repositories.Repositories
                         correo = account.correo,
                         idEstado = 2
                     }, _context);
-                }
+                    usuarioplataformacuentas = await GetUsuarioPlataformaCuentasbyIdCuenta(cuenta.idCuenta.ToString(), false);
+                    foreach (var item in usuarioplataformacuentas)
+                    {
+                        mensaje += Environment.NewLine;
+                        mensaje += await DeleteUsuarioPlataformaCuenta(item);
+                    }
+                    plataformacuentas = await GetPlataformaCuentasbyIdCuenta(cuenta.idCuenta.ToString(), false);
+                    foreach (var item in plataformacuentas)
+                    {
+                        mensaje += Environment.NewLine;
+                        mensaje += await DeletePlataformaCuenta(item);
+                    }
+            }
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
@@ -1094,7 +1140,11 @@ namespace Web_Billycock.Repositories.Repositories
             {
                 try
                 {
-                    return await _commonRepository_E.DeleteObjeto(estado, _context);
+                    return await _commonRepository_E.DeleteObjeto(new Estado() 
+                    {
+                        idEstado=estado.idEstado,
+                        descripcion=estado.descripcion 
+                    }, _context);
                 }
                 catch (Exception ex)
                 {
