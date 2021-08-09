@@ -78,6 +78,38 @@
         </dd>
     </dl>
 </div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                ID Plataforma
+            </th>
+            <th>
+                ID Cuenta
+            </th>
+            <th>
+                Cantidad
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.usuarioPlataformaCuentas)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Plataforma.descripcion)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Cuenta.correo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.cantidad)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.idUsuario">Edit</a> |
     <a asp-action="Index">Back to List</a>

@@ -321,6 +321,7 @@ namespace Web_Billycock.Repositories.Repositories
             public async Task<List<UsuarioDTO>> ObtenerUsuarios(int tipo, string dato, bool complemento)
             {
                 List<UsuarioDTO> usuarios = new List<UsuarioDTO>();
+                List<UsuarioPlataformaCuenta> usuarioPlataformaCuentas = new List<UsuarioPlataformaCuenta>();
                 try
                 {
                     if (tipo == 1)
@@ -373,6 +374,23 @@ namespace Web_Billycock.Repositories.Repositories
                                                 
                                             }).ToListAsync();
 
+                    }
+                    if(complemento)
+                    {
+                        foreach (var _usuario in usuarios)
+                        {
+                            foreach (var _plataforma in await GetPlataformas(false))
+                            {
+                                foreach (var _cuenta in await GetCuentas(false))
+                                {
+                                    if (await UsuarioPlataformaCuentaExists(_usuario.idUsuario + "-"+ _plataforma.idPlataforma + "-" + _cuenta.idCuenta))
+                                    {
+                                        usuarioPlataformaCuentas.Add(await GetUsuarioPlataformaCuentabyIds(_usuario.idUsuario + "-" + _plataforma.idPlataforma + "-" + _cuenta.idCuenta, true));
+                                    }
+                                }
+                            }
+                            _usuario.usuarioPlataformaCuentas = usuarioPlataformaCuentas;
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -755,15 +773,16 @@ namespace Web_Billycock.Repositories.Repositories
                                                             cantidad = upc.cantidad
                                                         }).ToListAsync();
                 }
-                //if (complemento)
-                //{
-                //    foreach (var _plataformaCuenta in plataformaCuentas)
-                //    {
-                //        _plataformaCuenta.Cuenta = await GetCuentabyId(_plataformaCuenta.idCuenta, false);
-                //        _plataformaCuenta.Plataforma = await GetPlataformabyId(_plataformaCuenta.idPlataforma, false);
-                //    }
-                //}
-                return usuarioPlataformaCuentas;
+                if (complemento)
+                {
+                    foreach (var _plataformaCuenta in usuarioPlataformaCuentas)
+                    {
+                        _plataformaCuenta.Cuenta = await GetCuentabyId(_plataformaCuenta.idCuenta, false);
+                        _plataformaCuenta.Plataforma = await GetPlataformabyId(_plataformaCuenta.idPlataforma, false);
+                        _plataformaCuenta.Usuario = await GetUsuariobyId(_plataformaCuenta.idUsuario, false);
+                    }
+                }
+            return usuarioPlataformaCuentas;
             }
 
             public async Task<List<EstadoDTO>> GetEstados()
