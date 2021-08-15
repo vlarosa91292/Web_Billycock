@@ -25,8 +25,8 @@ namespace Web_Billycock
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddScoped(_ => new BillycockServiceContext(Configuration["BillycockDb"]));
-            services.AddScoped(_ => new HilarioServiceContext(Configuration["HilarioDb"]));
+            services.AddScoped(_ => new BillycockServiceContext(Configuration));
+            services.AddScoped(_ => new HilarioServiceContext(Configuration));
             services.AddScoped(typeof(IBillycock_WebRepository<>), typeof(Billycock_WebRepository<>));
             services.AddScoped(typeof(ICommonRepository<>), typeof(CommonRepository<>));
         }
