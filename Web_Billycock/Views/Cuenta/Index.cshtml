@@ -75,9 +75,21 @@
             <td>
                 @Html.DisplayFor(modelItem => item.idCuenta)
             </td>
-            <td>
+            @if (item.plataformaCuentas.Where(pc => pc.idCuenta == item.idCuenta).Sum(pc => pc.usuariosdisponibles) == 0)
+            {
+                <td class="text-black-50">
+                    @Html.DisplayFor(modelItem => item.correo)
+                </td>
+            }
+            else
+            {
+                <td>
+                    @Html.DisplayFor(modelItem => item.correo)
+                </td>
+            }
+            @*<td>
                 @Html.DisplayFor(modelItem => item.correo)
-            </td>
+            </td>*@
             <td>
                 @Html.DisplayFor(modelItem => item.diminutivo)
             </td>
