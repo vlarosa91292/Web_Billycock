@@ -26,6 +26,13 @@ namespace Web_Billycock.Controllers
         // GET: Usuario
         public async Task<IActionResult> Index()
         {
+            List<UsuarioDTO> usuarios = await _context.GetUsuarios(false);
+            if (usuarios.Any())
+            {
+                if(usuarios.Count < 2)_notyfService.Information("Se listó "+ usuarios.Count + " usuario", 4);
+                else _notyfService.Information("Se listaron " + usuarios.Count + " usuarios", 4);
+            }
+            else _notyfService.Information("No se encontraron usuarios para listar", 4);
             return View(await _context.GetUsuarios(false));
         }
 
@@ -64,8 +71,10 @@ namespace Web_Billycock.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _context.InsertUsuario(usuario);
-                return RedirectToAction(nameof(Index));
+                string mensaje = await _context.InsertUsuario(usuario);
+                _notyfService.Success(mensaje.Replace("\r\n", "</br>"), 4);
+                if (mensaje.Contains("CORRECTA")) return RedirectToAction("Index");
+                else return View(usuario);
             }
             return View(usuario);
         }
@@ -98,20 +107,21 @@ namespace Web_Billycock.Controllers
         {
             if (id != usuario.idUsuario)
             {
-                return NotFound();
+                _notyfService.Information("El id no corresponde", 4);
+                return View();
             }
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    await _context.UpdateUsuario(usuario);
+                    _notyfService.Information(await _context.UpdateUsuario(usuario),4);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!await _context.UsuarioExists(usuario.idUsuario))
                     {
-                        return NotFound();
+                        _notyfService.Error("Usuario no existe", 4);
                     }
                     else
                     {

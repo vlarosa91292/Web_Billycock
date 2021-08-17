@@ -71,7 +71,8 @@ namespace Web_Billycock.Repositories.Repositories
 
                                 plataformacuenta = await GetPlataformaCuentabyIds(plataformacuenta.idPlataformaCuenta,false);
 
-                                await UpdatePlataformaCuenta(new PlataformaCuentaDTO()
+                                if (mensaje != string.Empty) mensaje += Environment.NewLine;
+                                mensaje += await UpdatePlataformaCuenta(new PlataformaCuentaDTO()
                                 {
                                     idPlataformaCuenta = plataformacuenta.idPlataformaCuenta,
                                     idCuenta = plataformacuenta.idCuenta,
@@ -93,7 +94,8 @@ namespace Web_Billycock.Repositories.Repositories
                         plataformacuentasTotalitario.Add(plataformacuenta);
 
                         plataformacuenta = await GetPlataformaCuentabyIds(plataformacuenta.idPlataformaCuenta, false);
-                        await UpdatePlataformaCuenta(new PlataformaCuentaDTO()
+                        if (mensaje != string.Empty) mensaje += Environment.NewLine;
+                        mensaje += await UpdatePlataformaCuenta(new PlataformaCuentaDTO()
                         {
                             idPlataformaCuenta = plataformacuenta.idPlataformaCuenta,
                             idCuenta = plataformacuenta.idCuenta,
@@ -106,14 +108,24 @@ namespace Web_Billycock.Repositories.Repositories
                 }
                 if (resultadonulo.Any())
                 {
-                    mensaje += "NO HAY SUFICIENTES USUARIOS DISPONIBLES: " + Environment.NewLine;
+                    if(mensaje != string.Empty)mensaje += Environment.NewLine;
+                    mensaje += "NO HAY SUFICIENTES USUARIOS DISPONIBLES: ";
                     plataformacuentasTemporal = plataformacuentasTotalitario;
                     plataformacuentasTotalitario = plataformacuentasTotalitario.GroupBy(x => x.idPlataformaCuenta)
                                             .Select(group => group.First()).ToList();
+
+                    for (int i = 0; i < resultadonulo.Count; i++)
+                    {
+                        mensaje += Environment.NewLine;
+                        mensaje += resultadonulo[i];
+                    }
+                    
                     foreach (var item in plataformacuentasTotalitario)
                     {
                         plataformacuenta = await GetPlataformaCuentabyIds(item.idPlataformaCuenta, false);
-                        await UpdatePlataformaCuenta(new PlataformaCuentaDTO()
+                        mensaje += Environment.NewLine;
+                        mensaje += Environment.NewLine;
+                        mensaje += await UpdatePlataformaCuenta(new PlataformaCuentaDTO()
                         {
                             idPlataformaCuenta = plataformacuenta.idPlataformaCuenta,
                             idCuenta = plataformacuenta.idCuenta,
@@ -124,14 +136,10 @@ namespace Web_Billycock.Repositories.Repositories
                         });
                     }
                             
-                    for (int i = 0; i < resultadonulo.Count; i++)
-                    {
-                        mensaje += resultadonulo[i];
-                        if (i < resultadonulo.Count - 1) mensaje += Environment.NewLine;
-                    }
                     return mensaje;
                 }
 
+                mensaje += Environment.NewLine;
                 mensaje += await _commonRepository_U.InsertObjeto(new Usuario()
                 {
                     descripcion = usuario.descripcion,
@@ -146,7 +154,8 @@ namespace Web_Billycock.Repositories.Repositories
                     Usuario user = await GetUsuariobyName(usuario.descripcion,false);
                     if(plataformacuentasTotalitario.Where(p => p.idPlataforma == item.idPlataforma).ToList().Count == 1)
                     {
-                        await InsertUsuarioPlataformaCuenta(new UsuarioPlataformaCuentaDTO()
+                        mensaje += Environment.NewLine;
+                        mensaje += await InsertUsuarioPlataformaCuenta(new UsuarioPlataformaCuentaDTO()
                         {
                             idUsuario = user.idUsuario,
                             idPlataforma = item.idPlataforma,
@@ -161,7 +170,8 @@ namespace Web_Billycock.Repositories.Repositories
                                             .Select(group => group.First()).ToList();
                         foreach (var conteo in plataformacuentas)
                         {
-                            await InsertUsuarioPlataformaCuenta(new UsuarioPlataformaCuentaDTO()
+                            mensaje += Environment.NewLine;
+                            mensaje += await InsertUsuarioPlataformaCuenta(new UsuarioPlataformaCuentaDTO()
                             {
                                 idUsuario = user.idUsuario,
                                 idPlataforma = item.idPlataforma,
