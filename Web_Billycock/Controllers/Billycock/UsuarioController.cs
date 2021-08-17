@@ -75,14 +75,17 @@ namespace Web_Billycock.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                _notyfService.Information("No se envia el id", 4);
+                return View();
             }
 
             var usuario = await _context.GetUsuariobyId(id, true);
             if (usuario == null)
             {
-                return NotFound();
+                _notyfService.Error("El usuario no existe", 4);
+                return RedirectToAction("Index");
             }
+            _notyfService.Success("Usuario encontrado", 4);
             return View(usuario);
         }
 
