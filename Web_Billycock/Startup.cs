@@ -1,3 +1,4 @@
+using AspNetCoreHero.ToastNotification;
 using Billycock.Data;
 using Billycock.Repositories.Repositories;
 using Billycock.Utils;
@@ -25,6 +26,12 @@ namespace Web_Billycock
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddNotyf(config =>
+            {
+                config.DurationInSeconds = 5;
+                config.IsDismissable = true;
+                config.Position = NotyfPosition.TopRight;
+            });
             services.AddScoped(_ => new BillycockServiceContext(Configuration));
             services.AddScoped(_ => new HilarioServiceContext(Configuration));
             services.AddScoped(typeof(IBillycock_WebRepository<>), typeof(Billycock_WebRepository<>));
