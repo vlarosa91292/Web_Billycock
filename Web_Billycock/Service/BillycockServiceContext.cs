@@ -12,7 +12,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
-using Web_Billycock.Repositories.Utils;
+using Web_Billycock.DTO;
 
 namespace Billycock.Data
 {
@@ -57,15 +57,12 @@ namespace Billycock.Data
                             InitialCatalog = bd.Database,
                             UserID = bd.UserId,
                             Password = bd.Password,
-                            ApplicationName = "Web_Billycock"
+                            ApplicationName = "Web_Billycock",
+                            MultipleActiveResultSets = bd.MultipleActiveResultSets,
+                            PersistSecurityInfo = bd.PersistSecurityInfo,
+                            Encrypt = bd.PersistSecurityInfo,
+                            TrustServerCertificate = bd.PersistSecurityInfo
                         };
-                        if (builder.UserID != "sa")
-                        {
-                            builder.MultipleActiveResultSets = true;
-                            builder.PersistSecurityInfo = false;
-                            builder.Encrypt = true;
-                            builder.TrustServerCertificate = false;
-                        }
                     }
                 }
             }
